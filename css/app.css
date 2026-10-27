@@ -270,3 +270,41 @@ a{color:var(--accent)}
 mark{background:color-mix(in srgb,var(--warn) 40%,transparent);color:inherit;border-radius:3px}
 .disclaimer{font-size:12.5px;color:var(--ink-3);line-height:1.45;text-align:center;padding:0 12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Registro de cargas: series del gimnasio, historial y peso corporal */
+.upchip{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em;vertical-align:2px;background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok);font-family:var(--font)}
+.upchip.flat{background:var(--fill);color:var(--ink-2)}
+.ex.done .name .upchip{display:none}
+.ex .done-sets{color:var(--ok);font-weight:600}
+.chart.c8{grid-template-columns:repeat(8,1fr);gap:6px}
+.chart .a{background:var(--accent)} .chart .b{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+.hchart{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;height:132px;margin-top:12px}
+.hchart div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0}
+.hchart span{font-size:10px;color:var(--ink-2);white-space:nowrap;letter-spacing:-.03em}
+.hchart i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:color-mix(in srgb,var(--accent) 30%,transparent)}
+.hchart i.last{background:var(--accent)}
+.hchart div:last-child span{color:var(--accent);font-weight:700}
+.hlist{margin-top:12px;border-top:1px solid var(--hair)}
+.hlist .row{padding:8px 0;border-bottom:1px solid var(--hair);font-size:13.5px;align-items:flex-start}
+.hlist .row:last-child{border-bottom:0}
+.hlist .mono{text-align:right;font-size:13px}
+.gs-goal{text-align:center;padding:16px}
+.gs-range{font-size:64px;font-weight:700;letter-spacing:-.04em;line-height:1;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+.gs-range small{font-size:26px;color:var(--ink-2);margin-left:4px;letter-spacing:0}
+.gs-det{font-size:13.5px;color:var(--ink-2);line-height:1.4}
+.gs-last{align-items:flex-start}
+.gs-sets{font-size:14px;font-weight:600;margin-top:4px;line-height:1.35}
+.gs-up{border:1.5px solid var(--ok)}
+.gs-up .eyebrow{color:var(--ok)}
+.gs-uptext{font-size:15px;font-weight:600;margin-top:4px;line-height:1.35}
+.useg{margin-top:6px;width:124px}
+.useg button{font-size:12.5px;padding:5px 0}
+.gs-done{width:100%;padding:17px;font-size:17px;border-radius:20px}
+.gs-next{font-size:16px;font-weight:600;margin-top:4px}
+.round.txt{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.gset{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--hair);flex-wrap:wrap;font-size:14px}
+.eyebrow+.gset{margin-top:6px;border-top:0}
+.gset .vbtn{padding:5px 11px}
+.vbtn.del{color:var(--stop)}
+.stepper.sm button{width:30px;height:28px;font-size:17px}
+.stepper.sm output{min-width:62px;font-size:13px}
