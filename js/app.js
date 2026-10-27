@@ -19,6 +19,8 @@ const todayIso = iso(new Date());
 /* ---------- plan (markdown) ---------- */
 /* el contenido vive en content/plan.md (o embebido en <script id="plan">) */
 const embedded = document.getElementById('plan');
+/* videos de referencia por ficha (content/videos.json); si no cargan, la app sigue sin esa sección */
+const videosReq = fetch('content/videos.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null);
 let text;
 try{ text = embedded ? embedded.textContent : await fetch('content/plan.md', { cache:'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }); }
 catch(e){ document.getElementById('view').innerHTML = '<p class="disclaimer">No se pudo cargar el plan. Revisá la conexión y volvé a abrir la página.</p>'; return; }
@@ -57,6 +59,8 @@ const fichas = fichaSec.body.split(/^#### /m).slice(1).map(chunk => {
   return { n: +m[1], name: m[2].trim(), en: sub ? sub[1].trim() : '', tags: sub ? sub[2].split('·').map(t => t.trim()).filter(Boolean) : [], body: rest, dose };
 });
 const fichaIntro = fichaSec.body.split(/^#### /m)[0].trim();
+const videos = ((await videosReq) || {}).videos || [];
+const videosDe = n => videos.filter(v => v.ficha === n && v.url);
 
 /* fases (sección 7) */
 const faseSec = sec(7);
@@ -254,9 +258,11 @@ function phaseBody(f, crit){
 function renderFichas(){
   $view.innerHTML = `
     ${head('Doce ejercicios · dosis por brazo', 'Fichas')}
-    <section class="glass list">${fichas.map(f => `
+    <section class="glass list">${fichas.map(f => { const nv = videosDe(f.n).length;
+      const sub = f.tags.concat(nv ? [`${nv} video${nv > 1 ? 's' : ''}`] : []).join(' · ');
+      return `
       <button class="li" data-ficha="${f.n}"><span class="badge">F${f.n}</span>
-        <div style="flex:1;min-width:0"><div class="t">${esc(f.name)}</div><div class="s">${esc(f.tags.join(' · '))}</div></div><span class="chev">›</span></button>`).join('')}
+        <div style="flex:1;min-width:0"><div class="t">${esc(f.name)}</div><div class="s">${esc(sub)}</div></div><span class="chev">›</span></button>`; }).join('')}
     </section>
     <section class="glass pad md">${md(fichaIntro)}</section>`;
 }
@@ -355,11 +361,34 @@ function showFicha(n){
     <section class="glass hero"><div class="tags"><span class="tag">Ficha ${f.n} de 12</span>${tags}</div>
       <h2>${esc(f.name)}</h2><div class="en">${esc(f.en)}</div></section>
     ${f.dose ? `<section class="glass dosecard md"><div class="eyebrow" style="margin-bottom:6px">Dosis</div>${inline(f.dose)}</section>` : ''}
+    ${videosDe(n).length ? `<section class="videos" id="fvideos" data-n="${n}">${videoCards(n)}</section>` : ''}
     <div class="md cards">${md(body)}</div>
     <div class="row between">
       ${n > 1 ? `<button class="btn ghost" data-ficha="${n-1}">‹ F${n-1}</button>` : '<span></span>'}
       ${n < 12 ? `<button class="btn ghost" data-ficha="${n+1}">F${n+1} ›</button>` : ''}
     </div>`);
+}
+/* validación desde la app: store 'videos' = { [url]: "ok" | "no" }; los "no" van al final */
+function videoCards(n){
+  const marks = store.get('videos', {});
+  const list = videosDe(n).map((v, i) => ({ v, i, m: marks[v.url] })).sort((a, b) => (a.m === 'no') - (b.m === 'no') || a.i - b.i);
+  return `<div class="eyebrow" style="padding:0 4px">Videos</div>${list.map(({ v, m }) => `
+    <div class="glass vcard ${m === 'ok' ? 'ok' : m === 'no' ? 'no' : ''}">
+      <a class="vt" href="${esc(v.url)}" target="_blank" rel="noopener">${m === 'ok' ? '<span class="check done" aria-label="Sirve"></span>' : ''}<span>${esc(v.titulo || v.url)}</span></a>
+      <div class="vmeta">${esc([v.canal, v.idioma === 'es' ? 'Español' : v.idioma === 'en' ? 'Inglés' : v.idioma].filter(Boolean).join(' · '))}</div>
+      ${v.nota ? `<p class="vnote">${esc(v.nota)}</p>` : ''}
+      <div class="row vbtns">
+        <button class="vbtn" data-vurl="${esc(v.url)}" data-vmark="ok" aria-pressed="${m === 'ok'}">Sirve</button>
+        <button class="vbtn" data-vurl="${esc(v.url)}" data-vmark="no" aria-pressed="${m === 'no'}">No sirve</button>
+      </div>
+    </div>`).join('')}`;
+}
+function markVideo(url, mark){
+  const marks = store.get('videos', {});
+  if (marks[url] === mark) delete marks[url]; else marks[url] = mark;
+  store.set('videos', marks);
+  const sec = document.getElementById('fvideos');
+  if (sec) sec.innerHTML = videoCards(+sec.dataset.n);
 }
 function showSection(n){
   const s = n === 0 ? { n:0, title:'Sobre este plan', body:introMd } : sec(n);
@@ -380,7 +409,7 @@ function showSettings(){
     </section>
     <section class="glass pad">
       <div class="eyebrow">Copia de seguridad</div>
-      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, criterios, fase y fecha de inicio. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
+      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, criterios, fase, fecha de inicio y la validación de los videos. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
       <div class="note" style="margin-top:4px">${backupAge()}</div>
       <div class="row" style="flex-wrap:wrap;margin-top:14px">
         <button class="btn" data-export>Guardar backup</button>
@@ -626,6 +655,7 @@ document.addEventListener('click', e => {
   if (ds.phase != null){ const n = +ds.phase; state.openPhase = state.openPhase === n ? -1 : n; render(); return; }
   if (ds.setphase != null){ store.set('settings', Object.assign(settings(), { phase:+ds.setphase })); if (!$sheet.hidden) showSettings(); else { state.openPhase = +ds.setphase; } render(); return; }
   if (ds.crit){ const c = store.get('crit', {}); c[ds.crit] = !c[ds.crit]; store.set('crit', c); render(); return; }
+  if (ds.vmark){ markVideo(ds.vurl, ds.vmark); return; }
   if (ds.ficha){ showFicha(+ds.ficha); return; }
   if (ds.section != null){ showSection(+ds.section); return; }
 });

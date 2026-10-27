@@ -1,0 +1,320 @@
+{
+  "version": 1,
+  "videos": [
+    {
+      "ficha": 1,
+      "titulo": "Tennis Elbow Exercise- Isometric Wrist Extension With Elbow Flexion",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=MYd74BTpqBs",
+      "idioma": "en",
+      "nota": "Es justo la ficha: antebrazo apoyado, mancuerna y muñeca apenas extendida, sostenida sin moverte. No marca los grados; apuntá a unos 30° y mano relajada.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 1,
+      "titulo": "Exercises for Tennis Elbow (Lateral epicondylitis)",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=4bgELYdFavs&t=66s",
+      "idioma": "en",
+      "nota": "Arranca en 1:06: codo a 90°, mano fuera de la mesa y muñeca en 20–30° de extensión sostenida, con la otra mano haciendo resistencia (es la alternativa sin peso). Después pasa a isotónico, que para vos es la ficha 4.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 1,
+      "titulo": "Isométricos de Muñeca",
+      "canal": "OrthoCarolina",
+      "url": "https://www.youtube.com/watch?v=huRXEK_dEaY",
+      "idioma": "es",
+      "nota": "Primer tramo (0:00–0:16): isométrico de extensión resistiendo con la otra mano, la alternativa sin peso de la ficha. Es cortito y sin dosis; los tiempos tomalos de la ficha (4×30 s).",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 2,
+      "titulo": "Wrist Flexion Isometrics With Elbow Flexion With Dumbbell",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=rKwcV92R8WA",
+      "idioma": "en",
+      "nota": "Igual que la ficha: palma arriba, antebrazo apoyado en la mesa y mancuerna sostenida en leve flexión de muñeca, sin moverte. Explica bien que el peso tira hacia extensión y vos solo aguantás.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 2,
+      "titulo": "Isométricos de Muñeca",
+      "canal": "OrthoCarolina",
+      "url": "https://www.youtube.com/watch?v=huRXEK_dEaY&t=17s",
+      "idioma": "es",
+      "nota": "Desde 0:17: la misma idea con la palma arriba, empujando con la otra mano mientras resistís. Sirve como versión sin peso; la dosis de la ficha es 5×30–45 s.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 2,
+      "titulo": "Isometric Wrist Flexion for Golfer's Elbow (Medial Epicondylitis)",
+      "canal": "Momenta Chiropractic",
+      "url": "https://www.youtube.com/watch?v=jSX3SJwFv20",
+      "idioma": "en",
+      "nota": "Isométrico de flexores con banda pisada, codo flexionado y muñeca cerca de neutro, 25–30 s × 3–4. Ojo: es un quiropráctico y no apoya la mano fuera del borde; tomalo por la explicación del dolor tolerable.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 3,
+      "titulo": "EARLY - Isometric Ball Squeeze Grip Strength",
+      "canal": "Pure Physiotherapy | Expert Physiotherapists",
+      "url": "https://www.youtube.com/watch?v=Opp7y4_PMMY",
+      "idioma": "en",
+      "nota": "Es exactamente la ficha: antebrazo apoyado, pelota apretada y sostenida 20–30 s, de 3 a 5 veces. Fijate que no bombea. Vos apretá al 30–40 %.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 3,
+      "titulo": "Ball Squeeze Isometric",
+      "canal": "E3 Rehab Exercise Library",
+      "url": "https://www.youtube.com/watch?v=MP8Lb4zz2vo",
+      "idioma": "en",
+      "nota": "Clip corto que muestra el sostén isométrico con pelota. Ojo: dice apretar \"lo más fuerte que puedas cómodo\"; para vos es 30–40 % con la muñeca en neutro o leve extensión.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 4,
+      "titulo": "Ejercicios terapéuticos para la epicondilitis - Hospital General de València",
+      "canal": "Hospital General de València",
+      "url": "https://www.youtube.com/watch?v=PNDVzRJh3uQ&t=86s",
+      "idioma": "es",
+      "nota": "Desde 1:26 está la fase 1 de la ficha tal cual: antebrazo en el borde de la mesa, subís con ayuda de la otra mano y bajás sola muy lento, 15 repeticiones. Antes muestra un estiramiento y un puño apretado que no son parte de esta ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 4,
+      "titulo": "Elbow Eccentric Strengthening Exercise",
+      "canal": "NHS Ayrshire & Arran",
+      "url": "https://www.youtube.com/watch?v=ZroW4ten1Ww",
+      "idioma": "en",
+      "nota": "Excéntrico puro igual que la ficha: palma abajo, mano fuera de la mesa, subís con la mano sana y bajás lento, 3×15. Es del NHS y es muy claro para la fase 1.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 4,
+      "titulo": "Lateral Epicondylalgia Exercises | Tennis Elbow Rehab",
+      "canal": "Physiotutors",
+      "url": "https://www.youtube.com/watch?v=Lf695_IJO8g&t=143s",
+      "idioma": "en",
+      "nota": "Desde 2:23 tenés la extensión con mancuerna concéntrico-excéntrica (fase 2+) y cómo aislar el excéntrico ayudando con la otra mano. Usa el codo a ~60° en vez de 90°. Al principio repasa la evidencia (Peterson, Coombes).",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 5,
+      "titulo": "Epitrocleítis: el ejercicio excéntrico que más funciona para el dolor",
+      "canal": "Hombro y Codo Chile | Dr. Claudio Moraga",
+      "url": "https://www.youtube.com/watch?v=tpHlYxhdsgk",
+      "idioma": "es",
+      "nota": "Excéntrico de flexores para epitrocleítis: apoyo del brazo, bajada en 3 s y subida con la mano sana. Corto pero explicado por un traumatólogo de codo; en la ficha 5 desde la fase 2 subís sin ayuda.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 5,
+      "titulo": "Golfer’s Elbow Rehab (Education | Myths | Stretching & Strengthening Exercises)",
+      "canal": "E3 Rehab",
+      "url": "https://www.youtube.com/watch?v=3CJMz0HoGXk&t=585s",
+      "idioma": "en",
+      "nota": "Desde 9:45: flexión de muñeca con antebrazo apoyado, 2–3×8–15, y en 10:29 cómo dejar que los dedos se abran abajo, igual que pide la ficha. También menciona el isométrico como opción si duele el rango completo.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 5,
+      "titulo": "Eccentric Flexor Wrist Curls - Golfer's Elbow Rehab",
+      "canal": "Dr. Alex St.Pierre DC",
+      "url": "https://www.youtube.com/watch?v=cGThxYunuFI",
+      "idioma": "en",
+      "nota": "Muestra bien la colocación (pliegue de la muñeca en el borde, codo a 90°) y desde 1:27 la versión solo excéntrica, subiendo con la otra mano y bajando en 4–5 s. Es de un quiropráctico.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 6,
+      "titulo": "Exercises for Tennis Elbow (Lateral epicondylitis)",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=4bgELYdFavs&t=240s",
+      "idioma": "en",
+      "nota": "Desde 4:00: desviación radial con mancuerna, mano fuera de la mesa y movimiento chico. Muestra la progresión de agarrar la mancuerna más lejos del centro, como dice la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 6,
+      "titulo": "Ulnar Deviation With Elbow Extension With Dumbbell",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=TdBXUS9qazM",
+      "idioma": "en",
+      "nota": "Desviación cubital con el codo extendido y la mancuerna, lento y con los hombros atrás. Equivale a la versión cubital de la ficha (brazo al costado); mantené el movimiento en 20–30°.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 6,
+      "titulo": "Ejercicios indicados para la epicondilitis o codo de tenista",
+      "canal": "FisioOnline",
+      "url": "https://www.youtube.com/watch?v=xVHjVC5RwfU&t=108s",
+      "idioma": "es",
+      "nota": "Desde 1:48 muestra las desviaciones a un lado y al otro, con la vuelta lenta. Usa banda elástica en vez de mancuerna (en 3:10 aclara que se puede con pesa); la técnica de la ficha es en posición martillo.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 7,
+      "titulo": "Elbow Forearm SupinationPronation",
+      "canal": "NHS Ayrshire & Arran",
+      "url": "https://www.youtube.com/watch?v=lrAWfBOMbMI",
+      "idioma": "en",
+      "nota": "Es la ficha: codo a 90° apoyado en la mesa, mancuerna vertical, girás palma arriba y palma abajo sin mover el brazo, hasta 3×15. Del NHS, muy claro.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 7,
+      "titulo": "Lateral Epicondylalgia Exercises | Tennis Elbow Rehab",
+      "canal": "Physiotutors",
+      "url": "https://www.youtube.com/watch?v=Lf695_IJO8g&t=339s",
+      "idioma": "en",
+      "nota": "Desde 5:39: supinación con martillo tomado por el extremo, girando despacio, y cómo aislar el excéntrico con la otra mano. Es la versión del mecanismo que la ficha relaciona con el Tyler twist.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 7,
+      "titulo": "Tennis Elbow Rehab (Education | Myths | Stretching & Strengthening Exercises)",
+      "canal": "E3 Rehab",
+      "url": "https://www.youtube.com/watch?v=aOueY1l_X0U&t=799s",
+      "idioma": "en",
+      "nota": "Desde 13:19 explica supinación y pronación con mancuerna o martillo: cuanto más cerca del centro lo agarrás, más fácil. Coincide con la progresión de la ficha (alejar el agarre antes de subir peso).",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 8,
+      "titulo": "Tennis Elbow Rehab: 6 Exercises to Build Grip Strength and Forearm Endurance",
+      "canal": "ChadGOrthoOT",
+      "url": "https://www.youtube.com/watch?v=i0rWz5Zr-eU&t=257s",
+      "idioma": "en",
+      "nota": "En 4:17 regula el gripper para 10–15 repeticiones con la muñeca neutra. Bien la idea, pero no marca el tempo 2-2-3: vos cerrá en 2 s, sostené y abrí en 3 s.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 8,
+      "titulo": "Grip Strengthener For Elbow, Wrist, & Hand Problems - Honest Physical Therapist Review",
+      "canal": "El Paso Manual Physical Therapy",
+      "url": "https://www.youtube.com/watch?v=_AK-4mjvpEQ&t=96s",
+      "idioma": "en",
+      "nota": "Desde 1:36 un kinesiólogo explica por qué conviene apretar y sostener en vez de bombear. Tomá esa idea, no la dosis: él propone 10×10 s cada hora y mucha tensión; vos empezás en el mínimo de la perilla y seguís la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 9,
+      "titulo": "Finger Extension with Band",
+      "canal": "Rehab My Patient",
+      "url": "https://www.youtube.com/watch?v=x0PFZZVOGpk",
+      "idioma": "en",
+      "nota": "Banda alrededor de los dedos y apertura de la mano contra la resistencia. Corto pero es justo el movimiento; cuidá que la muñeca quede neutra.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 9,
+      "titulo": "Tennis Elbow Rehab: 6 Exercises to Build Grip Strength and Forearm Endurance",
+      "canal": "ChadGOrthoOT",
+      "url": "https://www.youtube.com/watch?v=i0rWz5Zr-eU&t=241s",
+      "idioma": "en",
+      "nota": "En 4:01 usa bandas de extensión de dedos con aros, muy parecidas a la del kit. Propone 2–3×10–15 diarios; la ficha pide menos: 2×15, 3 días por semana.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 9,
+      "titulo": "Epicondilitis: ejercicios de rehabilitación - #CuidaTuSalud Clínico San Cecilio",
+      "canal": "Hospital Universitario Clinico San Cecilio",
+      "url": "https://www.youtube.com/watch?v=sVpEsb9Zvpo&t=149s",
+      "idioma": "es",
+      "nota": "Desde 2:29: goma en la punta de los dedos, abrís la mano y sostenés 3 s, 10 veces. Antes (0:45) muestra el excéntrico con bajada de 30 s, que es la variante Stasinopoulos de la ficha 4.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 10,
+      "titulo": "Farmer Carry for Lateral Elbow Pain",
+      "canal": "Jess Goldberg Physical Therapy and Performance",
+      "url": "https://www.youtube.com/watch?v=vHXPn6AKTk4",
+      "idioma": "en",
+      "nota": "Farmer's carry pensado para dolor lateral de codo: escápula activa, tronco firme, 30–60 s × 3, y una variante con toalla para el agarre. Acepta molestia de 2–4/10; vos quedate en el criterio del plan (≤3).",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 10,
+      "titulo": "How To Hang In Rock Climbing - Dead Hang vs Engaged Hang",
+      "canal": "[P]rehab",
+      "url": "https://www.youtube.com/watch?v=Gv6wTBFHt34",
+      "idioma": "en",
+      "nota": "Diferencia entre colgarse flojo y colgarse con hombros activos, que es lo que pide la ficha. Es para escaladores y sin pies apoyados; vos empezá descargando peso con los pies en el piso.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 10,
+      "titulo": "4 Ejercicios de Rehabilitación para la Epitrocleitis o el Codo de Golfista",
+      "canal": "PhysioWods - Ana Galeote",
+      "url": "https://www.youtube.com/watch?v=gHpOFxKkaQQ&t=510s",
+      "idioma": "es",
+      "nota": "Desde 8:30: colgarse de una cuerda o toalla como isométrico de agarre, sumando de a 10 s. Es una versión más exigente para el agarre que la barra con pies apoyados de la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 11,
+      "titulo": "Remo escapular con banda elástica",
+      "canal": "Fisioterapia Hospital Universitario Costa del Sol",
+      "url": "https://www.youtube.com/watch?v=48A6G2fcA3c",
+      "idioma": "es",
+      "nota": "Remo con banda atada a la puerta: codos atrás, juntás las escápulas y volvés controlado, sin que las manos bajen. Es el remo de la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 11,
+      "titulo": "Standing External Rotation with Resistance Band",
+      "canal": "MGHOrthopaedics",
+      "url": "https://www.youtube.com/watch?v=y8WKcz0vqzg",
+      "idioma": "en",
+      "nota": "Rotación externa con banda: codo a 90° pegado al cuerpo (con toallita), muñeca neutra y vuelta lenta. Igual que la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 11,
+      "titulo": "Prone Y's and T's - middle & lower traps",
+      "canal": "Revival Performance Physical Therapy",
+      "url": "https://www.youtube.com/watch?v=kvD49DSBY8Y",
+      "idioma": "en",
+      "nota": "Y boca abajo desde el inicio y T desde 1:01, pulgares arriba, sostené 2 s arriba. La ficha pide subir en 2 s y bajar en 3 s, sin peso o con 0,5–1 kg.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 11,
+      "titulo": "FORTALECIMIENTO. Ejercicio de Rotacion Externa de hombro con banda elastica",
+      "canal": "Paco The Fisio",
+      "url": "https://www.youtube.com/watch?v=wQdfeB80fqo",
+      "idioma": "es",
+      "nota": "Rotación externa con banda a la altura del ombligo, codo pegado a la cadera, sin abrir ni subir el hombro. Corto y en español; agarrá la banda relajado, como pide la ficha.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 12,
+      "titulo": "Muñecas [Movilidad] - 11 - Estiramiento de extensores de muñeca y dedos",
+      "canal": "Hospital Universitario Costa del Sol",
+      "url": "https://www.youtube.com/watch?v=n7LGFh8hdjw",
+      "idioma": "es",
+      "nota": "Estiramiento de extensores: brazo estirado, palma abajo y con la otra mano llevás la mano hacia vos 15–30 s. Es la técnica de la ficha; quedate en tirantez suave, sin dolor.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 12,
+      "titulo": "Wrist Extensor Stretch with Elbow Extension - Ask Doctor Jo",
+      "canal": "AskDoctorJo",
+      "url": "https://www.youtube.com/watch?v=80Y3HHMgo6w",
+      "idioma": "en",
+      "nota": "Estiramiento de extensores con el codo extendido. Ojo: lo hace con el puño cerrado, que estira más fuerte que con los dedos sueltos; si te da hormigueo o dolor, abrí la mano.",
+      "estado": "pendiente"
+    },
+    {
+      "ficha": 12,
+      "titulo": "Wrist Flexor Stretches with Elbow Extension - Ask Doctor Jo",
+      "canal": "AskDoctorJo",
+      "url": "https://www.youtube.com/watch?v=i-JV2PsFzWA",
+      "idioma": "en",
+      "nota": "Estiramiento de flexores con el codo extendido llevando los dedos hacia atrás con la otra mano. Es la segunda mitad de la ficha.",
+      "estado": "pendiente"
+    }
+  ]
+}

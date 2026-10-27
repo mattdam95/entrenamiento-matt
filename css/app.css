@@ -72,8 +72,8 @@ a{color:var(--accent)}
 .sheet .inner>*{animation:rise .5s cubic-bezier(.32,.72,0,1) both}
 .sheet .inner>*:nth-child(2){animation-delay:.04s}.sheet .inner>*:nth-child(3){animation-delay:.08s}.sheet .inner>*:nth-child(n+4){animation-delay:.12s}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.btn,.round,.play,.chip,.day,.checkbtn,.scale button,.stepper button{transition:transform .18s cubic-bezier(.32,.72,0,1)}
-.btn:active,.round:active,.play:active,.chip:active,.day:active,.checkbtn:active,.stepper button:active{transform:scale(.92)}
+.btn,.round,.play,.chip,.day,.checkbtn,.vbtn,.scale button,.stepper button{transition:transform .18s cubic-bezier(.32,.72,0,1)}
+.btn:active,.round:active,.play:active,.chip:active,.day:active,.checkbtn:active,.vbtn:active,.stepper button:active{transform:scale(.92)}
 .li,.phase-head{transition:opacity .15s}.li:active,.phase-head:active{opacity:.55}
 .phase-body{animation:rise .4s cubic-bezier(.32,.72,0,1)}
 
@@ -191,6 +191,20 @@ a{color:var(--accent)}
 .tag.main{background:var(--tendon);color:#fff}
 .dosecard{padding:14px 16px;border-left:0}
 .dosecard code{display:inline-block;max-width:100%;white-space:normal;font-family:var(--mono);font-size:15px;font-weight:700;padding:5px 10px;margin:3px 2px;border-radius:10px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
+
+/* Videos de referencia (dentro de la ficha) */
+.videos{display:flex;flex-direction:column;gap:10px}
+.vcard{padding:12px 16px;border-radius:22px;transition:opacity .2s}
+.vcard.no{opacity:.45}
+.vt{display:flex;gap:8px;align-items:flex-start;font-size:15.5px;font-weight:600;line-height:1.3;text-decoration:none;overflow-wrap:anywhere}
+.vt .check{width:20px;height:20px;border-width:1.5px;margin-top:-1px}
+.vt .check.done::after{width:7px;height:4px;border-width:2px}
+.vmeta{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.vnote{font-size:13.5px;line-height:1.45;margin:8px 0 0;overflow-wrap:anywhere}
+.vbtns{margin-top:10px;gap:8px}
+.vbtn{padding:6px 13px;border-radius:999px;font-size:13px;font-weight:600;background:var(--fill);color:var(--ink-2)}
+.vbtn[data-vmark="ok"][aria-pressed="true"]{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
+.vbtn[data-vmark="no"][aria-pressed="true"]{background:color-mix(in srgb,var(--stop) 16%,transparent);color:var(--stop)}
 
 /* Markdown */
 .md{font-size:15px;line-height:1.55;min-width:0;overflow-wrap:anywhere}
