@@ -21,58 +21,83 @@ const todayIso = iso(new Date());
 const embedded = document.getElementById('plan');
 /* videos de referencia por ficha (content/videos.json); si no cargan, la app sigue sin esa sección */
 const videosReq = fetch('content/videos.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null);
+/* plan de fuerza (content/fuerza.md); si no carga, la app sigue sin el gimnasio */
+const fuerzaReq = fetch('content/fuerza.md', { cache:'no-cache' }).then(r => r.ok ? r.text() : null).catch(() => null);
 let text;
 try{ text = embedded ? embedded.textContent : await fetch('content/plan.md', { cache:'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }); }
 catch(e){ document.getElementById('view').innerHTML = '<p class="disclaimer">No se pudo cargar el plan. Revisá la conexión y volvé a abrir la página.</p>'; return; }
-const raw = text.replace(/^---[\s\S]*?---\s*/, '');
 const md = s => window.marked ? marked.parse(s) : '<pre style="white-space:pre-wrap">'+esc(s)+'</pre>';
 function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function inline(s){ return window.marked ? marked.parseInline(s) : esc(s); }
 
-const parts = raw.split(/^## /m);
-const introMd = parts[0].replace(/^Índice[\s\S]*$/m, '').trim();
-const sections = parts.slice(1).map(p => {
-  const nl = p.indexOf('\n');
-  const title = p.slice(0, nl).trim();
-  const m = title.match(/^(\d+)\s*·\s*(.*)$/);
-  return { n: m ? +m[1] : 0, title: m ? m[2] : title, body: p.slice(nl+1).trim() };
-});
-const sec = n => sections.find(s => s.n === n);
+/* secciones "## N · Título"; lo anterior a la primera es la intro */
+function parseDoc(text){
+  const parts = text.replace(/^---[\s\S]*?---\s*/, '').split(/^## /m);
+  const sections = parts.slice(1).map(p => {
+    const nl = p.indexOf('\n');
+    const title = p.slice(0, nl).trim();
+    const m = title.match(/^(\d+)\s*·\s*(.*)$/);
+    return { n: m ? +m[1] : 0, title: m ? m[2] : title, body: p.slice(nl+1).trim() };
+  });
+  return { intro: parts[0].replace(/^Índice[\s\S]*$/m, '').trim(), sections, sec: n => sections.find(s => s.n === n) };
+}
+/* fichas "#### N · Nombre" o "#### Gn · Nombre"; los "### Grupo" intermedios agrupan las que siguen */
+function parseFichas(body){
+  let group = '';
+  const takeGroups = s => s.replace(/^### (.*)\n?/gm, (_, t) => { group = t.trim(); return ''; }).trim();
+  const chunks = body.split(/^#### /m);
+  const intro = takeGroups(chunks[0]);
+  const list = chunks.slice(1).map(chunk => {
+    const lines = chunk.split('\n');
+    const m = lines[0].match(/^(G?)(\d+)\s*·\s*(.*)$/);
+    const g = group;
+    let rest = takeGroups(lines.slice(1).join('\n'));
+    const sub = rest.match(/^\*([^*]+)\*\s*·?\s*(.*)$/m);
+    if (sub) rest = rest.replace(sub[0], '').trim();
+    /* anidar las listas de "Errores" bajo su viñeta */
+    let inErr = false;
+    rest = rest.split('\n').map(l => {
+      if (/^- \*\*Errores/.test(l)) { inErr = true; return l; }
+      if (/^- \*\*/.test(l)) { inErr = false; return l; }
+      if (inErr && /^- /.test(l)) return '    ' + l;
+      return l;
+    }).join('\n');
+    const dose = (rest.match(/^- \*\*Dosis\*\* — (.*)$/m) || [])[1] || '';
+    return { n: +m[2], code: (m[1] || 'F') + m[2], group: g, name: m[3].trim(), en: sub ? sub[1].trim() : '', tags: sub ? sub[2].split('·').map(t => t.trim()).filter(Boolean) : [], body: rest, dose };
+  });
+  return { intro, list };
+}
+/* fases o etapas: una línea con el número, después "### Título", subtítulo y cuerpo */
+function parseStages(body, word){
+  const chunks = body.split(/^(\d)\s*$/m), list = [];
+  for (let i = 1; i < chunks.length; i += 2) {
+    const n = +chunks[i]; const c = chunks[i+1].trim();
+    const t = c.match(/^### (.*)$/m); const after = c.replace(/^### .*$/m, '').trim();
+    const nl = after.indexOf('\n');
+    list.push({ n, title: t ? t[1].trim() : word+' '+n, sub: (nl < 0 ? after : after.slice(0, nl)).trim(), body: nl < 0 ? '' : after.slice(nl+1).trim() });
+  }
+  return { intro: chunks[0].trim(), list };
+}
 
-/* fichas (sección 6) */
-const fichaSec = sec(6);
-const fichas = fichaSec.body.split(/^#### /m).slice(1).map(chunk => {
-  const lines = chunk.split('\n');
-  const m = lines[0].match(/^(\d+)\s*·\s*(.*)$/);
-  let rest = lines.slice(1).join('\n').trim();
-  const sub = rest.match(/^\*([^*]+)\*\s*·?\s*(.*)$/m);
-  if (sub) rest = rest.replace(sub[0], '').trim();
-  /* anidar las listas de "Errores" bajo su viñeta */
-  let inErr = false;
-  rest = rest.split('\n').map(l => {
-    if (/^- \*\*Errores/.test(l)) { inErr = true; return l; }
-    if (/^- \*\*/.test(l)) { inErr = false; return l; }
-    if (inErr && /^- /.test(l)) return '    ' + l;
-    return l;
-  }).join('\n');
-  const dose = (rest.match(/^- \*\*Dosis\*\* — (.*)$/m) || [])[1] || '';
-  return { n: +m[1], name: m[2].trim(), en: sub ? sub[1].trim() : '', tags: sub ? sub[2].split('·').map(t => t.trim()).filter(Boolean) : [], body: rest, dose };
-});
-const fichaIntro = fichaSec.body.split(/^#### /m)[0].trim();
+const doc = parseDoc(text);
+const introMd = doc.intro, sections = doc.sections, sec = doc.sec;
+/* fichas (sección 6) y fases (sección 7) */
+const { intro: fichaIntro, list: fichas } = parseFichas(sec(6).body);
+const { intro: faseIntro, list: fases } = parseStages(sec(7).body, 'Fase');
 const videos = ((await videosReq) || {}).videos || [];
 const videosDe = n => videos.filter(v => v.ficha === n && v.url);
 
-/* fases (sección 7) */
-const faseSec = sec(7);
-const faseChunks = faseSec.body.split(/^(\d)\s*$/m);
-const faseIntro = faseChunks[0].trim();
-const fases = [];
-for (let i = 1; i < faseChunks.length; i += 2) {
-  const n = +faseChunks[i]; const c = faseChunks[i+1].trim();
-  const t = c.match(/^### (.*)$/m); const after = c.replace(/^### .*$/m, '').trim();
-  const nl = after.indexOf('\n');
-  fases.push({ n, title: t ? t[1].trim() : 'Fase '+n, sub: (nl < 0 ? after : after.slice(0, nl)).trim(), body: nl < 0 ? '' : after.slice(nl+1).trim() });
-}
+/* gimnasio: fichas G (§4), etapas (§5) y entrada en calor (§6) de fuerza.md */
+let gym = null;
+try{
+  const t = await fuerzaReq;
+  if (t){
+    const d = parseDoc(t), fi = parseFichas(d.sec(4).body), et = parseStages(d.sec(5).body, 'Etapa');
+    const warm = (d.sec(6).body.match(/^Cada sesión[^.]*\./m) || [])[0] || 'Cada sesión empieza con **5 min de bici o cinta** y **1–2 series de aproximación** livianas del primer ejercicio.';
+    if (fi.list.length && et.list.length) gym = { intro: d.intro, sections: d.sections, sec: d.sec, fichas: fi.list, fichaIntro: fi.intro, etapas: et.list, etapaIntro: et.intro, warm };
+  }
+}catch(e){ gym = null; }
+const fichaDe = code => (code[0] === 'G' ? (gym ? gym.fichas : []) : fichas).find(f => f.code === code);
 
 /* ---------- sesiones por fase y día (de §7 y §8) ---------- */
 const F = {
@@ -120,14 +145,76 @@ const PLAN = {
         : { label:'Actividad libre', time:'', items:[], info:'Regla de picos: ninguna semana más de 20–30 % por encima del promedio de las 4 anteriores en horas de mano.' }
 };
 
+/* ---------- gimnasio: sesiones por etapa y día (de fuerza.md §5 y §6) ---------- */
+/* gx('G4','3×8–12 · 120 s') → { g, dose, sets, reps:[8,12], rest:120 }; con "N s" por serie usa secs en vez de reps */
+const gx = (g, dose, extra) => {
+  const m = dose.match(/(\d+)×(\d+)(?:–(\d+))?(\s*s\b)?/), r = m && [+m[2], +(m[3] || m[2])];
+  const rest = (dose.match(/·\s*(\d+)\s*s\b/) || [])[1];
+  return Object.assign({ g, dose, sets: m ? +m[1] : 0, reps: m && !m[4] ? r : null }, m && m[4] ? { secs:r } : {},
+    { rest: rest ? +rest : 0 }, /por (lado|pierna)/.test(dose) ? { lado:true } : {}, extra || {});
+};
+const SS = ' · superserie';
+const torsoA = e => ({ id:'torsoA', label:'Torso A', time:'≈55 min', items:[
+  gx('G4','3×8–12 · 120 s'),
+  e === 1 ? gx('G1','2×10–12 · 120 s') : gx('G1','3×8–12 · 120 s'),
+  gx('G6','2×8–12 · 90 s'),
+  e === 1 ? gx('G2','2×10–12 por lado · 90 s') : gx('G2','3×10–12 por lado · 90 s'),
+  gx('G7','3×12–20 · 60 s'),
+  gx('G10','2×10–15 · 60 s'+SS, { ss:'G11' }), gx('G11','2×10–15 · 60 s'+SS, { ss:'G10' })] });
+const torsoB = e => ({ id:'torsoB', label:'Torso B', time:'≈55 min', items:[
+  gx('G1', (e === 1 ? '2×10–12' : '3×10–12') + ' · 120 s · agarre supino'),
+  gx('G5','3×8–15 · 120 s'),
+  e === 1 ? gx('G2','2×10–12 por lado · 90 s') : gx('G3','3×8–12 por lado · 90 s')]
+  .concat(e === 1 ? [] : [gx('G9','2×12–15 por lado · 60 s')])
+  .concat([gx('G7','3×12–20 · 60 s'), gx('G12','2×10–15 · 60 s'+SS, { ss:'G10' }), gx('G10','2×10–15 · 60 s'+SS, { ss:'G12' })]) });
+const piernasA = e => ({ id:'piernasA', label:'Piernas A', time:'≈50 min', items:[
+  gx('G13','3×8–12 · 120 s'),
+  e === 1 ? gx('G15','2×10–12 · 120 s · liviano') : gx('G15','3×8–12 · 120 s'),
+  gx('G14','2×8–12 por pierna · 90 s'), gx('G18','3×10–15 · 75 s'), gx('G19','3×10–15 por pierna · 60 s'),
+  gx('G20','Dead bug · 2×8–10 por lado · 60 s')] });
+const piernasB = () => ({ id:'piernasB', label:'Piernas B', time:'≈50 min', items:[
+  gx('G14','3×8–12 por pierna · 90 s'), gx('G16','3×10–15 · 120 s'), gx('G17','3×10–15 · 75 s'), gx('G18','2×10–15 · 75 s'),
+  gx('G19','3×10–15 por pierna · 60 s'), gx('G20','Plancha lateral · 2×20–40 s por lado · 45 s')] });
+/* los descansos de Torso C, Empuje y Tirón no están en §5: salen de la dosis de cada ficha */
+const torsoC = () => ({ id:'torsoC', label:'Torso C', time:'', items:[
+  gx('G7','3×12–20 · 60 s'), gx('G5','3×8–15 · 120 s'), gx('G9','2×12–15 por lado · 60 s'), gx('G8','2×15–20 · 60 s'),
+  gx('G10','3×10–15 · 60 s'+SS, { ss:'G11' }), gx('G11','3×10–15 por lado · 60 s'+SS, { ss:'G10' }), gx('G12','2×10–15 · 60 s')] });
+const empuje = () => ({ id:'empuje', label:'Empuje', time:'', items:[
+  gx('G4','3×8–12 · 120 s'), gx('G5','3×8–15 · 120 s'), gx('G6','3×8–12 · 90 s'), gx('G9','2×12–15 por lado · 60 s'),
+  gx('G7','3×12–20 · 60 s'), gx('G11','3×10–15 por lado · 60 s')] });
+const tiron = () => ({ id:'tiron', label:'Tirón', time:'', items:[
+  gx('G1','3×8–12 · 120 s'), gx('G3','3×8–12 por lado · 90 s'), gx('G2','2×10–12 por lado · 90 s'), gx('G8','2×15–20 · 60 s'),
+  gx('G10','3×10–15 · 60 s'), { f:10, dose:'Carry 3×30–40 m o colgarse 3×15–30 s', sets:3, reps:null, rest:60 }],
+  info:'Straps: en Fase 4 podés soltarlos en la primera serie de cada tirón y mantenerlos en las siguientes.' });
+const off = (label, info) => ({ id:null, label, time:'', items:[], info: info || '' });
+const RIR1 = 'Etapa 1: 3 repeticiones en reserva en todo. Straps en todos los tirones.';
+const RIR = 'Grandes con 1–2 en reserva; en los chicos, la última serie con 0–1. Nunca al fallo en los 🟡.';
+/* índice = día de la semana (0 = domingo) */
+const GYM = {
+  1: [off('Descanso'), torsoA(1), piernasA(1), off('Antebrazo pesado en casa', 'Sin gimnasio: hoy toca la sesión pesada de antebrazo.'), piernasB(1), torsoB(1), off('Aeróbico o descanso')],
+  2: [off('Descanso'), torsoA(2), piernasA(2), off('Descanso'), torsoB(2), piernasB(2), off('Endurance de antebrazo + aeróbico opcional', 'Sin gimnasio: endurance de antebrazo en casa (15 min).')],
+  3: [off('Descanso'), torsoA(3), piernasA(3), off('Endurance de antebrazo en casa', 'Sin gimnasio: en la Etapa 3 la endurance de antebrazo pasa al miércoles.'), torsoB(3), piernasB(3), torsoC()],
+  4: [off('Descanso'), empuje(), tiron(), piernasA(4), empuje(), tiron(), piernasB(4)]
+};
+const gymDay = (etapa, dow) => { const s = GYM[etapa][dow]; return s.items.length ? Object.assign({}, s, { info: [s.info, etapa === 1 ? RIR1 : RIR].filter(Boolean).join(' ') }) : s; };
+/* qué fases de antebrazo corresponden a cada etapa */
+const ETAPA_FASE = { 1:[2], 2:[3], 3:[3,4], 4:[4] };
+const itemCode = it => it.g || 'F' + it.f;
+
 /* ---------- estado ---------- */
 let state = {
   tab: ['hoy','programa','fichas','guia'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'hoy',
   date: todayIso,
   openPhase: null,
-  q: ''
+  openEtapa: null,
+  rehabOpen: false,
+  q: '',
+  /* segmentos de Programa y Fichas: 'rehab' | 'gym' */
+  seg: Object.assign({ programa:'rehab', fichas:'rehab' }, store.get('seg', {}))
 };
-const settings = () => Object.assign({ phase: 1, start: todayIso, sound: true }, store.get('settings', {}));
+if (!gym) state.seg = { programa:'rehab', fichas:'rehab' };
+const settings = () => Object.assign({ phase: 1, start: todayIso, sound: true, etapa: 1 }, store.get('settings', {}));
+const etapaOk = s => (ETAPA_FASE[s.etapa] || []).includes(s.phase);
 const log = date => store.get('log:'+date, {});
 const setLog = (date, patch) => store.set('log:'+date, Object.assign(log(date), patch));
 function weekOf(date){ const s = parseIso(settings().start); return Math.max(1, Math.floor((parseIso(date) - s) / 864e5 / 7) + 1); }
@@ -153,7 +240,6 @@ function renderHoy(){
   const ses = PLAN[s.phase](dow);
   const L = log(state.date), checks = L.checks || {};
   const total = ses.items.length, done = ses.items.filter((_, i) => checks[i]).length;
-  const C = 2*Math.PI*26, frac = total ? done/total : 0;
   const monday = addDays(d, -((dow+6)%7));
   const days = [...Array(7)].map((_, i) => addDays(monday, i));
   const isToday = state.date === todayIso;
@@ -163,8 +249,46 @@ function renderHoy(){
     const code = it.f ? `<span class="fnum">F${it.f}</span>` : `<span class="fnum x">+</span>`;
     const name = it.f ? F[it.f] : it.name;
     const text = `<div style="flex:1;min-width:0"><div class="name">${name}${it.f?'<span class="more" aria-hidden="true"> ›</span>':''}</div>${it.dose?`<div class="dose mono">${it.dose}</div>`:''}</div>`;
-    return `<div class="ex ${on?'done':''}">${it.f ? `<button class="exinfo" data-ficha="${it.f}" aria-label="Ver ficha de ${name}">${code}${text}</button>` : code + text}${it.spec?`<button class="play" data-timer="${i}" aria-label="Timer de ${name}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>`:''}<button class="checkbtn" data-check="${i}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
+    return `<div class="ex ${on?'done':''}">${it.f ? `<button class="exinfo" data-ficha="F${it.f}" aria-label="Ver ficha de ${name}">${code}${text}</button>` : code + text}${it.spec?`<button class="play" data-timer="${i}" aria-label="Timer de ${name}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>`:''}<button class="checkbtn" data-check="${i}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
   }).join('');
+  const ring = (done, total) => { const C = 2*Math.PI*26, frac = total ? done/total : 0;
+    return `<svg class="ring" viewBox="0 0 62 62"><circle cx="31" cy="31" r="26" stroke="var(--hair)"/><circle cx="31" cy="31" r="26" stroke="var(--ok)" stroke-dasharray="${C*frac} ${C}" transform="rotate(-90 31 31)"/><text x="31" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">${done}/${total}</text></svg>`; };
+  /* antebrazo: completo se pliega a una fila; tocarla la despliega */
+  const folded = total > 0 && done === total && !state.rehabOpen;
+  const rehabHtml = folded
+    ? `<button class="glass pad row fold" data-fold aria-expanded="false" style="width:100%;text-align:left"><span class="check done"></span>
+        <div style="flex:1;min-width:0"><div class="eyebrow">Antebrazo · primero</div><div style="font-size:16px;font-weight:600;margin-top:3px">${ses.label} · ${total}/${total} hecho</div></div><span class="chev">›</span></button>`
+    : `<section class="glass pad">
+      <div class="row between" style="margin-bottom:${total?6:0}px${total && done === total ? ';cursor:pointer" data-fold role="button" aria-expanded="true' : ''}">
+        <div><div class="eyebrow">Antebrazo · primero</div><div style="font-size:20px;font-weight:700;margin-top:3px">${ses.label}</div><div class="muted" style="font-size:13px;margin-top:2px">${ses.time || (total ? total+' ítems' : 'Sin ejercicios')}</div></div>
+        ${total ? ring(done, total) : ''}
+      </div>
+      <div>${items}</div>
+      ${ses.info ? `<div class="info">${ses.info}</div>` : ''}
+    </section>`;
+
+  /* gimnasio: checks por código en log.gym */
+  let gymHtml = '';
+  if (gym){
+    const gs = gymDay(s.etapa, dow), gl = L.gym || {};
+    if (!gs.items.length) gymHtml = `<section class="glass pad row"><span class="fnum x">—</span><div style="flex:1;min-width:0"><div class="eyebrow">Gimnasio</div><div style="font-size:16px;font-weight:600;margin-top:3px">${gs.label}</div>${gs.info ? `<div class="note" style="margin-top:3px">${gs.info}</div>` : ''}</div></section>`;
+    else {
+      const gdone = gs.items.filter(it => gl[itemCode(it)]).length;
+      const rows = gs.items.map(it => {
+        const c = itemCode(it), on = !!gl[c], name = it.g ? (fichaDe(c) || {}).name || c : F[it.f];
+        return `<div class="ex ${on?'done':''}"><button class="exinfo" data-ficha="${c}" aria-label="Ver ficha de ${esc(name)}"><span class="fnum ${it.g?'g':''}">${c}</span><div style="flex:1;min-width:0"><div class="name">${esc(name)}<span class="more" aria-hidden="true"> ›</span></div><div class="dose mono">${it.dose}</div></div></button><button class="checkbtn" data-gcheck="${c}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
+      }).join('');
+      gymHtml = `<section class="glass pad">
+        <div class="row between" style="margin-bottom:6px">
+          <div><div class="eyebrow">Gimnasio · ${gs.label}</div><div style="font-size:20px;font-weight:700;margin-top:3px">${gs.time || gs.items.length + ' ejercicios'}</div><div class="muted" style="font-size:13px;margin-top:2px">Etapa ${s.etapa}</div></div>
+          ${ring(gdone, gs.items.length)}
+        </div>
+        <div class="info warm">${inline(gym.warm)}</div>
+        <div>${rows}</div>
+        ${gs.info ? `<div class="info">${gs.info}</div>` : ''}
+      </section>`;
+    }
+  }
 
   const pain = L.pain, morning = L.morning, hours = L.hours ?? 0;
   const scale = (key, val) => [...Array(11)].map((_, v) => `<button class="z-${zone(v)}" data-${key}="${v}" aria-pressed="${val===v}" aria-label="${v} de 10">${v}</button>`).join('');
@@ -179,17 +303,11 @@ function renderHoy(){
 
   $view.innerHTML = `
     ${head(`${DIAS[dow]} ${d.getDate()} ${MESES[d.getMonth()]}`, isToday ? 'Hoy' : DIAS[dow],
-      `<button class="chip glass" data-settings><span class="dot"></span>Fase ${s.phase} · sem ${weekOf(state.date)}</button>`)}
-    <div class="week glass">${days.map(x => { const k = iso(x), has = log(k).pain != null || Object.values(log(k).checks||{}).some(Boolean);
+      `<button class="chip glass" data-settings><span class="dot"></span>F${s.phase}${gym ? ` · Etapa ${s.etapa}` : ''} · sem ${weekOf(state.date)}</button>`)}
+    <div class="week glass">${days.map(x => { const k = iso(x), lk = log(k), has = lk.pain != null || Object.values(lk.checks||{}).some(Boolean) || Object.values(lk.gym||{}).some(Boolean);
       return `<button class="day ${k===todayIso?'today':''}" data-date="${k}" aria-pressed="${k===state.date}">${DCORTO[x.getDay()]}<b>${x.getDate()}</b><i class="${has?'has':''}"></i></button>`; }).join('')}</div>
-    <section class="glass pad">
-      <div class="row between" style="margin-bottom:${total?6:0}px">
-        <div><div class="eyebrow">${ses.label}</div><div style="font-size:20px;font-weight:700;margin-top:3px">${ses.time || (total ? total+' ítems' : 'Sin ejercicios')}</div></div>
-        ${total ? `<svg class="ring" viewBox="0 0 62 62"><circle cx="31" cy="31" r="26" stroke="var(--hair)"/><circle cx="31" cy="31" r="26" stroke="var(--ok)" stroke-dasharray="${C*frac} ${C}" transform="rotate(-90 31 31)"/><text x="31" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">${done}/${total}</text></svg>` : ''}
-      </div>
-      <div>${items}</div>
-      ${ses.info ? `<div class="info">${ses.info}</div>` : ''}
-    </section>
+    ${rehabHtml}
+    ${gymHtml}
     <section class="glass pad">
       <div class="row between"><div class="eyebrow">Dolor máximo del día</div><span class="mono muted" style="font-size:13px">límite 3–4</span></div>
       <div class="scale">${scale('pain', pain)}</div>
@@ -209,79 +327,118 @@ function renderHoy(){
     <p class="disclaimer">Orientativo: no reemplaza a tu traumatólogo o kinesiólogo. Los registros se guardan sólo en este dispositivo. ${backupAge()} <button data-settings style="color:var(--accent);font-size:inherit">Hacer backup</button></p>`;
 }
 
-function renderPrograma(){
-  const s = settings();
-  if (state.openPhase == null) state.openPhase = s.phase;
-  const crit = store.get('crit', {});
-  $view.innerHTML = `
-    ${head('24 semanas · se avanza por criterios', 'Programa')}
-    ${fases.map(f => {
-      const cls = f.n < s.phase ? 'past' : f.n === s.phase ? 'now' : 'next';
-      const open = state.openPhase === f.n;
-      return `<section class="glass phase ${cls} ${open?'open':''}">
-        <button class="phase-head" data-phase="${f.n}" aria-expanded="${open}" style="width:100%;text-align:left">
+/* control segmentado Antebrazo/Gimnasio de Programa y Fichas (sólo si cargó fuerza.md) */
+function segCtl(key, a){
+  if (!gym) return '';
+  return `<div class="seg">${[['rehab', a], ['gym', 'Gimnasio']].map(([v, t]) => `<button data-seg="${key}" data-v="${v}" aria-pressed="${state.seg[key] === v}">${t}</button>`).join('')}</div>`;
+}
+const linkCard = (id, eb, title) => `<button class="glass pad row between" data-section="${id}" style="width:100%;text-align:left">
+      <div><div class="eyebrow">${eb}</div><div style="font-size:16px;font-weight:600;margin-top:3px">${title}</div></div><span class="chev">›</span></button>`;
+/* fases (antebrazo) o etapas (gimnasio) con la misma UI */
+function stageCards(list, cur, open, kind, word, crit){
+  return list.map(f => {
+    const cls = f.n < cur ? 'past' : f.n === cur ? 'now' : 'next', isOpen = open === f.n;
+    return `<section class="glass phase ${cls} ${isOpen?'open':''}">
+        <button class="phase-head" data-${kind}="${f.n}" aria-expanded="${isOpen}" style="width:100%;text-align:left">
           <span class="pn">${f.n}</span>
           <div style="flex:1;min-width:0"><h3>${esc(f.title)}</h3><div class="wk">${inline(f.sub)}</div></div>
           <span class="chev">›</span></button>
-        ${open ? `<div class="phase-body md">${phaseBody(f, crit)}</div>
-          ${f.n !== s.phase ? `<div style="margin-top:12px"><button class="btn ghost" data-setphase="${f.n}">Estoy en esta fase</button></div>` : ''}` : ''}
+        ${isOpen ? `<div class="phase-body md">${phaseBody(f, crit, kind === 'etapa' ? 'g' : '')}</div>
+          ${f.n !== cur ? `<div style="margin-top:12px"><button class="btn ghost" data-set${kind}="${f.n}">Estoy en esta ${word}</button></div>` : ''}` : ''}
       </section>`;
-    }).join('')}
-    <button class="glass pad row between" data-section="8" style="width:100%;text-align:left">
-      <div><div class="eyebrow">§8</div><div style="font-size:16px;font-weight:600;margin-top:3px">Semana tipo</div></div><span class="chev">›</span></button>
-    <button class="glass pad row between" data-section="9" style="width:100%;text-align:left">
-      <div><div class="eyebrow">§9</div><div style="font-size:16px;font-weight:600;margin-top:3px">Cómo progresar y cuándo frenar</div></div><span class="chev">›</span></button>
+  }).join('');
+}
+
+function renderPrograma(){
+  const s = settings();
+  const crit = store.get('crit', {});
+  if (state.seg.programa === 'gym'){
+    if (state.openEtapa == null) state.openEtapa = s.etapa;
+    $view.innerHTML = `
+      ${head('Gimnasio · se avanza por criterios', 'Programa')}
+      ${segCtl('programa', 'Antebrazo')}
+      ${stageCards(gym.etapas, s.etapa, state.openEtapa, 'etapa', 'etapa', crit)}
+      ${linkCard('g6', 'Gimnasio · §6', 'Sesiones')}
+      ${linkCard('g3', 'Gimnasio · §3', 'Cómo progresar')}
+      ${linkCard('g1', 'Gimnasio · §1', 'Cómo encaja con la rehab')}
+      <p class="disclaimer">${inline(gym.etapaIntro)}</p>`;
+    return;
+  }
+  if (state.openPhase == null) state.openPhase = s.phase;
+  $view.innerHTML = `
+    ${head('24 semanas · se avanza por criterios', 'Programa')}
+    ${segCtl('programa', 'Antebrazo')}
+    ${stageCards(fases, s.phase, state.openPhase, 'phase', 'fase', crit)}
+    ${linkCard('8', '§8', 'Semana tipo')}
+    ${linkCard('9', '§9', 'Cómo progresar y cuándo frenar')}
     <p class="disclaimer">${inline(faseIntro)}</p>`;
 }
 
-function phaseBody(f, crit){
+/* criterios tildables bajo 'crit': "<fase>:<i>" o, en el gimnasio, "g<etapa>:<i>" */
+function phaseBody(f, crit, prefix){
   const wrap = document.createElement('div');
   wrap.innerHTML = md(f.body);
   wrap.querySelectorAll('p > strong:only-child').forEach(st => {
     const t = st.textContent, ul = st.parentElement.nextElementSibling;
-    if (/^Avanzás/.test(t)) {
+    if (/^(Avanzás|Pasás)/.test(t)) {
       st.className = 'lbl-ok';
       if (ul && ul.tagName === 'UL') {
         ul.classList.add('crit');
         [...ul.children].forEach((li, i) => {
-          const k = f.n+':'+i;
+          const k = (prefix || '')+f.n+':'+i;
           li.dataset.crit = k;
           li.innerHTML = `<span class="check ${crit[k]?'done':''}"></span><span>${li.innerHTML}</span>`;
         });
       }
-    } else if (/^Retroced/.test(t)) st.className = 'lbl-bad';
+    } else if (/^(Retroced|Volvés)/.test(t)) st.className = 'lbl-bad';
     else if (/^Consult/.test(t)) st.className = 'lbl-warn';
   });
   return wrap.innerHTML;
 }
 
 function renderFichas(){
+  const li = (f, sub) => `
+      <button class="li" data-ficha="${f.code}"><span class="badge ${f.code[0] === 'G' ? 'g' : ''}">${f.code}</span>
+        <div style="flex:1;min-width:0"><div class="t">${esc(f.name)}</div><div class="s">${esc(sub)}</div></div><span class="chev">›</span></button>`;
+  if (state.seg.fichas === 'gym'){
+    const groups = [...new Set(gym.fichas.map(f => f.group))];
+    $view.innerHTML = `
+      ${head('Veinte ejercicios · gimnasio', 'Fichas')}
+      ${segCtl('fichas', 'Recuperación')}
+      ${groups.map(g => `<div class="eyebrow group-eb">${esc(g || 'Ejercicios')}</div>
+      <section class="glass list">${gym.fichas.filter(f => f.group === g).map(f => li(f, f.tags.join(' · '))).join('')}</section>`).join('')}
+      <section class="glass pad md">${md(gym.fichaIntro)}</section>`;
+    return;
+  }
   $view.innerHTML = `
     ${head('Doce ejercicios · dosis por brazo', 'Fichas')}
+    ${segCtl('fichas', 'Recuperación')}
     <section class="glass list">${fichas.map(f => { const nv = videosDe(f.n).length;
-      const sub = f.tags.concat(nv ? [`${nv} video${nv > 1 ? 's' : ''}`] : []).join(' · ');
-      return `
-      <button class="li" data-ficha="${f.n}"><span class="badge">F${f.n}</span>
-        <div style="flex:1;min-width:0"><div class="t">${esc(f.name)}</div><div class="s">${esc(sub)}</div></div><span class="chev">›</span></button>`; }).join('')}
+      return li(f, f.tags.concat(nv ? [`${nv} video${nv > 1 ? 's' : ''}`] : []).join(' · ')); }).join('')}
     </section>
     <section class="glass pad md">${md(fichaIntro)}</section>`;
 }
 
+/* secciones de la guía: rehab con id "N", gimnasio con id "gN" */
+const guiaGroups = () => [{ label:'Recuperación', items:[{ id:'0', n:0, title:'Sobre este plan', body:introMd }].concat(sections.map(s => Object.assign({ id:''+s.n }, s))) }]
+  .concat(gym ? [{ label:'Gimnasio', items:[{ id:'g0', n:0, title:'Sobre el plan de fuerza', body:gym.intro }].concat(gym.sections.map(s => Object.assign({ id:'g'+s.n }, s))) }] : []);
 function renderGuia(){
   const q = norm(state.q.trim());
-  const all = [{ n:0, title:'Sobre este plan', body:introMd }].concat(sections);
-  const hits = q ? all.filter(s => norm(s.title + ' ' + s.body).includes(q)) : all;
-  const listHtml = hits.map(s => {
+  const row = s => {
     let snip = '';
     if (q) { const plain = s.body.replace(/[*`#>|_\[\]]/g, ''); const i = norm(plain).indexOf(q);
       if (i >= 0) snip = esc(plain.slice(Math.max(0, i-40), i)) + '<mark>' + esc(plain.slice(i, i+q.length)) + '</mark>' + esc(plain.slice(i+q.length, i+q.length+60)); }
-    return `<button class="li" data-section="${s.n}"><div style="flex:1;min-width:0"><div class="t">${esc(s.title)}</div>${snip?`<div class="s">…${snip}…</div>`:''}</div><small>${s.n?'§'+s.n:''}</small><span class="chev">›</span></button>`;
-  }).join('') || '<div class="li muted">Sin resultados.</div>';
+    return `<button class="li" data-section="${s.id}"><div style="flex:1;min-width:0"><div class="t">${esc(s.title)}</div>${snip?`<div class="s">…${snip}…</div>`:''}</div><small>${s.n?'§'+s.n:''}</small><span class="chev">›</span></button>`;
+  };
+  const listHtml = guiaGroups().map(g => {
+    const hits = q ? g.items.filter(s => norm(s.title + ' ' + s.body).includes(q)) : g.items;
+    return hits.length ? `<div class="eyebrow group-eb">${g.label}</div><section class="glass list">${hits.map(row).join('')}</section>` : '';
+  }).join('') || '<section class="glass list"><div class="li muted">Sin resultados.</div></section>';
 
   if ($view.dataset.tab === 'guia' && document.getElementById('q')) { document.getElementById('glist').innerHTML = listHtml; return; }
   $view.innerHTML = `
     ${head('Reglas y retorno', 'Guía')}
-    <label class="search glass"><span class="muted" aria-hidden="true">⌕</span><input id="q" type="search" placeholder="Buscar en el plan" value="${esc(state.q)}" autocomplete="off"></label>
+    <label class="search glass"><span class="muted" aria-hidden="true">⌕</span><input id="q" type="search" placeholder="${gym ? 'Buscar en los dos planes' : 'Buscar en el plan'}" value="${esc(state.q)}" autocomplete="off"></label>
     <section class="glass pad"><div class="eyebrow">Dolor aceptable, en una frase</div>
       <div class="big">Molestia difusa ≤3–4/10 que no te cambia la técnica, se va en pocas horas y mañana no está.</div></section>
     <section class="glass pad lights">
@@ -289,7 +446,7 @@ function renderGuia(){
       <div class="lrow"><span class="lamp" style="background:var(--warn)"></span><div><b>Mantenés</b><p>Dolor 3–4/10 durante que se va en horas, o un día malo aislado en una semana que viene bien.</p></div></div>
       <div class="lrow"><span class="lamp" style="background:var(--stop)"></span><div><b>Bajás un escalón</b><p>Dolor &gt;4/10 durante, por encima de tu base a la mañana y 24 h más, dos semanas de dolor en subida, o vuelve el hormigueo.</p></div></div>
     </section>
-    <section class="glass list" id="glist">${listHtml}</section>`;
+    <div class="groups" id="glist">${listHtml}</div>`;
 }
 const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
@@ -353,19 +510,27 @@ function fixLinks(root){
   root.querySelectorAll('a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
   root.querySelectorAll('table').forEach(t => { if (!t.parentElement.classList.contains('tbl')) { const w = document.createElement('div'); w.className = 'tbl'; t.replaceWith(w); w.appendChild(t); } });
 }
-function showFicha(n){
-  const f = fichas.find(x => x.n === n);
-  const tags = f.tags.map(t => `<span class="tag ${/PRINCIPAL/i.test(t)?'main':''}">${esc(t)}</span>`).join('');
+/* code: "F4" (recuperación) o "G4" (gimnasio); las flechas se mueven dentro del mismo plan */
+function showFicha(code){
+  const f = fichaDe(code); if (!f) return;
+  const list = code[0] === 'G' ? gym.fichas : fichas, i = list.indexOf(f), prev = list[i-1], next = list[i+1];
+  /* semáforo de agarre: 🟢 / 🟡 como tag de color */
+  const tags = f.tags.map(t => {
+    const m = t.match(/^(🟢|🟡)\s*(.*)$/u);
+    if (m) return `<span class="tag ${m[1] === '🟢' ? 'gl-ok' : 'gl-warn'}">${esc(m[2] || (m[1] === '🟢' ? 'Agarre liviano' : 'Agarre medio/alto'))}</span>`;
+    return `<span class="tag ${/PRINCIPAL/i.test(t)?'main':''}">${esc(t)}</span>`;
+  }).join('');
   const body = f.body.replace(/^- \*\*Dosis\*\* — .*$/m, '');
+  const vids = code[0] === 'F' && videosDe(f.n).length;
   openSheet(state.tab === 'hoy' ? 'Hoy' : 'Fichas', `
-    <section class="glass hero"><div class="tags"><span class="tag">Ficha ${f.n} de 12</span>${tags}</div>
+    <section class="glass hero"><div class="tags"><span class="tag">Ficha ${code[0] === 'G' ? code : f.n} de ${list.length}</span>${tags}</div>
       <h2>${esc(f.name)}</h2><div class="en">${esc(f.en)}</div></section>
     ${f.dose ? `<section class="glass dosecard md"><div class="eyebrow" style="margin-bottom:6px">Dosis</div>${inline(f.dose)}</section>` : ''}
-    ${videosDe(n).length ? `<section class="videos" id="fvideos" data-n="${n}">${videoCards(n)}</section>` : ''}
+    ${vids ? `<section class="videos" id="fvideos" data-n="${f.n}">${videoCards(f.n)}</section>` : ''}
     <div class="md cards">${md(body)}</div>
     <div class="row between">
-      ${n > 1 ? `<button class="btn ghost" data-ficha="${n-1}">‹ F${n-1}</button>` : '<span></span>'}
-      ${n < 12 ? `<button class="btn ghost" data-ficha="${n+1}">F${n+1} ›</button>` : ''}
+      ${prev ? `<button class="btn ghost" data-ficha="${prev.code}">‹ ${prev.code}</button>` : '<span></span>'}
+      ${next ? `<button class="btn ghost" data-ficha="${next.code}">${next.code} ›</button>` : ''}
     </div>`);
 }
 /* validación desde la app: store 'videos' = { [url]: "ok" | "no" }; los "no" van al final */
@@ -397,14 +562,17 @@ function markVideo(url, mark){
   const sec = document.getElementById('fvideos');
   if (sec) sec.innerHTML = videoCards(+sec.dataset.n);
 }
-function showSection(n){
-  const s = n === 0 ? { n:0, title:'Sobre este plan', body:introMd } : sec(n);
+function showSection(id){
+  const g = id[0] === 'g', s = guiaGroups()[g ? 1 : 0].items.find(x => x.id === id);
+  if (!s) return;
   const back = state.tab === 'programa' ? 'Programa' : 'Guía';
-  openSheet(back, `<div>${n?`<div class="eyebrow">§${n}</div>`:''}<h1 class="large" style="font-size:30px;text-wrap:balance">${esc(s.title)}</h1></div>
+  const eb = [g ? 'Gimnasio' : '', s.n ? '§'+s.n : ''].filter(Boolean).join(' · ');
+  openSheet(back, `<div>${eb?`<div class="eyebrow">${eb}</div>`:''}<h1 class="large" style="font-size:30px;text-wrap:balance">${esc(s.title)}</h1></div>
     <section class="glass pad md">${md(s.body)}</section>`);
 }
 function showSettings(){
   const s = settings();
+  const fasesDe = (ETAPA_FASE[s.etapa] || []).join('–');
   openSheet('Hoy', `
     <div><h1 class="large">Ajustes</h1></div>
     <section class="glass pad">
@@ -414,9 +582,15 @@ function showSettings(){
       <label class="field" style="margin-top:12px"><span>Inicio del plan</span><input id="start" type="date" value="${s.start}"></label>
       <div class="note">Se usa para calcular la semana (hoy: semana ${weekOf(todayIso)}).</div>
     </section>
+    ${gym ? `<section class="glass pad">
+      <div class="eyebrow">Etapa del gimnasio</div>
+      <div class="seg" style="margin-top:10px">${[1,2,3,4].map(p => `<button data-setetapa="${p}" aria-pressed="${s.etapa===p}">${p}</button>`).join('')}</div>
+      <div class="note">${esc(gym.etapas.find(e => e.n === s.etapa)?.title || '')}. Corresponde a la Fase ${fasesDe} del antebrazo.</div>
+      ${etapaOk(s) ? '' : `<div class="note alert">Estás en Fase ${s.phase} del antebrazo: esta etapa va con la Fase ${fasesDe}. Revisá los criterios en Programa antes de sumar carga.</div>`}
+    </section>` : ''}
     <section class="glass pad">
       <div class="eyebrow">Copia de seguridad</div>
-      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, criterios, fase, fecha de inicio y la validación de los videos. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
+      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, criterios, fase, etapa del gimnasio, fecha de inicio y la validación de los videos. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
       <div class="note" style="margin-top:4px">${backupAge()}</div>
       <div class="row" style="flex-wrap:wrap;margin-top:14px">
         <button class="btn" data-export>Guardar backup</button>
@@ -439,7 +613,7 @@ function collect(){
 function summary(data){
   const days = Object.keys(data).filter(k => k.startsWith('log:')).sort();
   const s = data.settings || {};
-  return `${days.length} día${days.length === 1 ? '' : 's'} registrado${days.length === 1 ? '' : 's'}${days.length ? ` (${days[0].slice(4)} a ${days[days.length-1].slice(4)})` : ''} · fase ${s.phase ?? '—'}`;
+  return `${days.length} día${days.length === 1 ? '' : 's'} registrado${days.length === 1 ? '' : 's'}${days.length ? ` (${days[0].slice(4)} a ${days[days.length-1].slice(4)})` : ''} · fase ${s.phase ?? '—'}${s.etapa ? ` · etapa ${s.etapa}` : ''}`;
 }
 function backupAge(){
   const t = store.get('lastBackup', null);
@@ -501,7 +675,7 @@ function applyRestore(){
   try{ Object.keys(localStorage).filter(k => k.startsWith(PREFIX)).forEach(k => localStorage.removeItem(k)); }catch(e){}
   Object.keys(mem).forEach(k => delete mem[k]);
   Object.entries(data).forEach(([k, v]) => store.set(k, v));
-  state.openPhase = null;
+  state.openPhase = state.openEtapa = null;
   render(); showSettings();
   backupMsg('Restaurado: ' + summary(data) + '.', 'ok');
 }
@@ -633,7 +807,7 @@ function stopTimer(){ if (T){ cancelAnimationFrame(T.raf); try{ T.lock && T.lock
 
 /* ---------- eventos ---------- */
 document.addEventListener('click', e => {
-  const t = e.target.closest('button,[data-crit]'); if (!t) return;
+  const t = e.target.closest('button,[data-crit],[data-fold]'); if (!t) return;
   const ds = t.dataset;
   if (ds.tab){
     const from = TABS.indexOf(state.tab), to = TABS.indexOf(ds.tab);
@@ -654,17 +828,22 @@ document.addEventListener('click', e => {
   if ('tskip' in ds){ jump(1); return; }
   if ('tback' in ds){ jump(-1); return; }
   if ('settings' in ds){ showSettings(); return; }
-  if (ds.date){ state.date = ds.date; render(); return; }
+  if (ds.date){ state.date = ds.date; state.rehabOpen = false; render(); return; }
+  if ('fold' in ds){ state.rehabOpen = !state.rehabOpen; render(); return; }
+  if (ds.gcheck){ const g = Object.assign({}, log(state.date).gym); g[ds.gcheck] = !g[ds.gcheck]; setLog(state.date, { gym:g }); render(); return; }
   if (ds.check != null){ const L = log(state.date), c = L.checks || {}; c[ds.check] = !c[ds.check]; setLog(state.date, { checks:c }); render(); return; }
   if (ds.pain != null){ const v = +ds.pain; setLog(state.date, { pain: log(state.date).pain === v ? null : v }); render(); return; }
   if (ds.morning != null){ const v = +ds.morning; setLog(state.date, { morning: log(state.date).morning === v ? null : v }); render(); return; }
   if (ds.hours){ const h = Math.max(0, Math.min(18, (log(state.date).hours || 0) + +ds.hours)); setLog(state.date, { hours:h }); render(); return; }
   if (ds.phase != null){ const n = +ds.phase; state.openPhase = state.openPhase === n ? -1 : n; render(); return; }
   if (ds.setphase != null){ store.set('settings', Object.assign(settings(), { phase:+ds.setphase })); if (!$sheet.hidden) showSettings(); else { state.openPhase = +ds.setphase; } render(); return; }
+  if (ds.etapa != null){ const n = +ds.etapa; state.openEtapa = state.openEtapa === n ? -1 : n; render(); return; }
+  if (ds.setetapa != null){ store.set('settings', Object.assign(settings(), { etapa:+ds.setetapa })); if (!$sheet.hidden) showSettings(); else { state.openEtapa = +ds.setetapa; } render(); return; }
+  if (ds.seg){ if (state.seg[ds.seg] === ds.v) return; state.seg = Object.assign({}, state.seg, { [ds.seg]: ds.v }); store.set('seg', state.seg); animateView(ds.v === 'gym' ? 1 : -1); render(); window.scrollTo(0,0); return; }
   if (ds.crit){ const c = store.get('crit', {}); c[ds.crit] = !c[ds.crit]; store.set('crit', c); render(); return; }
   if (ds.vmark){ markVideo(ds.vurl, ds.vmark); return; }
-  if (ds.ficha){ showFicha(+ds.ficha); return; }
-  if (ds.section != null){ showSection(+ds.section); return; }
+  if (ds.ficha){ showFicha(ds.ficha); return; }
+  if (ds.section != null){ showSection(ds.section); return; }
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'q'){ state.q = e.target.value; $view.dataset.tab = 'guia'; renderGuia(); }
