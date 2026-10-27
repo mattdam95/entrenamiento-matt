@@ -30,7 +30,7 @@ Para probarlo en el iPhone dentro de la misma red: `http://<ip-de-la-pc>:8000`.
 
 ## Publicar en GitHub Pages
 
-Settings → Pages → Source: *Deploy from a branch* → `main` / `/ (root)`. Queda en `https://<usuario>.github.io/antebrazos24/`.
+Settings → Pages → Source: *Deploy from a branch* → `main` / `/ (root)`. Publicado en https://mattdam95.github.io/entrenamiento-matt/
 
 Después de cambiar algo, subí la versión del cache en `sw.js` (`antebrazos24-v1` → `v2`) para que los teléfonos que ya la tienen instalada tomen los cambios.
 
