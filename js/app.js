@@ -158,7 +158,8 @@ function renderHoy(){
     const on = !!checks[i];
     const code = it.f ? `<span class="fnum">F${it.f}</span>` : `<span class="fnum x">+</span>`;
     const name = it.f ? F[it.f] : it.name;
-    return `<div class="ex ${on?'done':''}">${code}<div style="flex:1;min-width:0"><div class="name">${name}</div>${it.dose?`<div class="dose mono">${it.dose}</div>`:''}</div>${it.spec?`<button class="play" data-timer="${i}" aria-label="Timer de ${name}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>`:''}<button class="checkbtn" data-check="${i}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
+    const text = `<div style="flex:1;min-width:0"><div class="name">${name}${it.f?'<span class="more" aria-hidden="true"> ›</span>':''}</div>${it.dose?`<div class="dose mono">${it.dose}</div>`:''}</div>`;
+    return `<div class="ex ${on?'done':''}">${it.f ? `<button class="exinfo" data-ficha="${it.f}" aria-label="Ver ficha de ${name}">${code}${text}</button>` : code + text}${it.spec?`<button class="play" data-timer="${i}" aria-label="Timer de ${name}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>`:''}<button class="checkbtn" data-check="${i}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
   }).join('');
 
   const pain = L.pain, morning = L.morning, hours = L.hours ?? 0;
@@ -350,7 +351,7 @@ function showFicha(n){
   const f = fichas.find(x => x.n === n);
   const tags = f.tags.map(t => `<span class="tag ${/PRINCIPAL/i.test(t)?'main':''}">${esc(t)}</span>`).join('');
   const body = f.body.replace(/^- \*\*Dosis\*\* — .*$/m, '');
-  openSheet('Fichas', `
+  openSheet(state.tab === 'hoy' ? 'Hoy' : 'Fichas', `
     <section class="glass hero"><div class="tags"><span class="tag">Ficha ${f.n} de 12</span>${tags}</div>
       <h2>${esc(f.name)}</h2><div class="en">${esc(f.en)}</div></section>
     ${f.dose ? `<section class="glass dosecard md"><div class="eyebrow" style="margin-bottom:6px">Dosis</div>${inline(f.dose)}</section>` : ''}
