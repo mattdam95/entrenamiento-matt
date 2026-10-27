@@ -372,17 +372,24 @@ function showFicha(n){
 function videoCards(n){
   const marks = store.get('videos', {});
   const list = videosDe(n).map((v, i) => ({ v, i, m: marks[v.url] })).sort((a, b) => (a.m === 'no') - (b.m === 'no') || a.i - b.i);
-  return `<div class="eyebrow" style="padding:0 4px">Videos</div>${list.map(({ v, m }) => `
+  return `<div class="eyebrow" style="padding:0 4px">Videos · se abren en YouTube</div>${list.map(({ v, m }) => { const id = ytId(v.url); return `
     <div class="glass vcard ${m === 'ok' ? 'ok' : m === 'no' ? 'no' : ''}">
-      <a class="vt" href="${esc(v.url)}" target="_blank" rel="noopener">${m === 'ok' ? '<span class="check done" aria-label="Sirve"></span>' : ''}<span>${esc(v.titulo || v.url)}</span></a>
+      <a class="vlink" href="${esc(v.url)}" target="_blank" rel="noopener" aria-label="Ver video: ${esc(v.titulo || '')}">
+        <span class="vthumb">${id ? `<img src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">` : ''}
+          <span class="vplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></span>
+          ${/[?&]t=/.test(v.url) ? `<span class="vtag">Arranca en el minuto justo</span>` : ''}
+          ${m === 'ok' ? '<span class="vok"><span class="check done" aria-label="Sirve"></span></span>' : ''}</span>
+        <span class="vt">${esc(v.titulo || v.url)}<span class="vext" aria-hidden="true">↗</span></span>
+      </a>
       <div class="vmeta">${esc([v.canal, v.idioma === 'es' ? 'Español' : v.idioma === 'en' ? 'Inglés' : v.idioma].filter(Boolean).join(' · '))}</div>
       ${v.nota ? `<p class="vnote">${esc(v.nota)}</p>` : ''}
       <div class="row vbtns">
         <button class="vbtn" data-vurl="${esc(v.url)}" data-vmark="ok" aria-pressed="${m === 'ok'}">Sirve</button>
         <button class="vbtn" data-vurl="${esc(v.url)}" data-vmark="no" aria-pressed="${m === 'no'}">No sirve</button>
       </div>
-    </div>`).join('')}`;
+    </div>`; }).join('')}`;
 }
+const ytId = u => (u.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/) || [])[1];
 function markVideo(url, mark){
   const marks = store.get('videos', {});
   if (marks[url] === mark) delete marks[url]; else marks[url] = mark;

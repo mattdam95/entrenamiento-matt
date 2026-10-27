@@ -1,5 +1,5 @@
 /* Offline: primero la red (para recibir actualizaciones), si no hay conexión usa la copia guardada. */
-const CACHE = 'antebrazos24-v4';
+const CACHE = 'antebrazos24-v5';
 const SHELL = ['./', 'index.html', 'css/app.css', 'js/app.js', 'content/plan.md', 'content/videos.json', 'manifest.webmanifest', 'icons/icon.svg', 'icons/apple-touch-icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js'];
 
