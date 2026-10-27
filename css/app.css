@@ -1,6 +1,6 @@
 /* Base: márgenes seguros del iPhone (notch / barra de inicio) */
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;min-height:100vh}
+body{margin:0;min-height:100vh;overflow-x:hidden}
 img{max-width:100%}
 [hidden]{display:none!important}
 /* Layout: app de una columna (máx 560px) con pestañas Hoy · Programa · Fichas · Guía; tarjetas de vidrio sobre fondo liso estilo Ajustes de iOS */
@@ -190,17 +190,17 @@ a{color:var(--accent)}
 .tag{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--fill);letter-spacing:.03em;text-transform:uppercase}
 .tag.main{background:var(--tendon);color:#fff}
 .dosecard{padding:14px 16px;border-left:0}
-.dosecard code{display:inline-block;font-family:var(--mono);font-size:15px;font-weight:700;padding:5px 10px;margin:3px 2px;border-radius:10px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
+.dosecard code{display:inline-block;max-width:100%;white-space:normal;font-family:var(--mono);font-size:15px;font-weight:700;padding:5px 10px;margin:3px 2px;border-radius:10px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
 
 /* Markdown */
-.md{font-size:15px;line-height:1.55;min-width:0}
+.md{font-size:15px;line-height:1.55;min-width:0;overflow-wrap:anywhere}
 .md>*:first-child{margin-top:0}
 .md p{margin:8px 0}
 .md h3{font-size:18px;margin:22px 0 6px;letter-spacing:-.01em;text-wrap:balance}
 .md h4{font-size:16px;margin:18px 0 6px}
 .md ul,.md ol{padding-left:20px;margin:8px 0}
 .md li{margin:5px 0}
-.md code{font-family:var(--mono);font-size:13px;padding:2px 6px;border-radius:7px;background:var(--fill);white-space:nowrap}
+.md code{font-family:var(--mono);font-size:13px;padding:2px 6px;border-radius:7px;background:var(--fill);white-space:normal;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .md blockquote{margin:10px 0;padding:8px 12px;border-radius:14px;background:var(--fill)}
 .tbl{overflow-x:auto;margin:10px -4px;-webkit-overflow-scrolling:touch}
 .md table{border-collapse:collapse;font-size:13px;min-width:520px}
@@ -211,7 +211,7 @@ a{color:var(--accent)}
 .md.cards>ul>li>strong:first-child,.md.cards>ul>li>p:first-child>strong:first-child{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
 
 /* Pantalla de detalle */
-.sheet{position:fixed;inset:0;z-index:15;background:var(--ground);overflow-y:auto;-webkit-overflow-scrolling:touch;
+.sheet{position:fixed;inset:0;z-index:15;background:var(--ground);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-top:env(safe-area-inset-top,0px);transform:translateX(0);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .sheet[hidden]{display:none!important}
