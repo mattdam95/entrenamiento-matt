@@ -328,8 +328,36 @@ function allLogs(){
 /* registro de cargas: series de un día, sesiones anteriores y si toca subir */
 const setsDia = (code, secs, date) => (((log(date).sets || {})[code]) || []).filter(s => !!s.secs === !!secs);
 const previas = (code, secs, date) => sesionesDe(allLogs().filter(x => x.date < date), code, secs);
-function progDe(it, date){ const p = previas(it.g, it.secs, date); return progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs); }
+function progDe(it, date){ if (it.freno) return null; const p = previas(it.g, it.secs, date); return progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs); }
 const unidad = code => store.get('units', {})[code];
+/* freno de agarre (§1): si después de un día con series de 🟡 amanecés por encima de tu base,
+   por 7 días los 🟡 van a 2 series y sin subir peso; dos semanas seguidas así → volver una etapa */
+const esAmarillo = code => ((fichaDe(code) || {}).tags || []).some(t => t.startsWith('🟡'));
+function baseManana(date){
+  const desde = iso(addDays(parseIso(date), -14));
+  const v = allLogs().filter(x => x.date < date && x.date >= desde && x.L.morning != null).map(x => x.L.morning).sort((a, b) => a - b);
+  return v.length >= 3 ? v[Math.floor((v.length - 1) / 2)] : null;
+}
+function frenos(){
+  return allLogs().filter(({ L }) => Object.entries(L.sets || {}).some(([c, a]) => a.length && esAmarillo(c))).map(({ date }) => {
+    const m = iso(addDays(parseIso(date), 1)), v = log(m).morning, b = baseManana(m);
+    return v != null && v > (b ?? 3) ? { date, m, v, b } : null;
+  }).filter(Boolean);
+}
+function frenoEn(date){ const f = frenos().filter(x => x.m <= date && date < iso(addDays(parseIso(x.m), 7))); return f.length ? f[f.length-1] : null; }
+const lunes = d => { const x = parseIso(d); return iso(addDays(x, -((x.getDay() + 6) % 7))); };
+function retroceso(date){
+  const w = new Set(frenos().filter(x => x.m <= date).map(x => lunes(x.m))), cur = lunes(date);
+  const a = iso(addDays(parseIso(cur), -7)), b = iso(addDays(parseIso(cur), -14));
+  return (w.has(cur) && w.has(a)) || (w.has(a) && w.has(b));
+}
+function gymSes(etapa, date){
+  const s = gymDay(etapa, parseIso(date).getDay()), fr = s.items.length && frenoEn(date);
+  if (!fr) return s;
+  return Object.assign({}, s, { freno: fr, items: s.items.map(it => it.g && esAmarillo(it.g)
+    ? Object.assign({}, it, { freno: true, sets: Math.min(it.sets, 2), dose: it.dose.replace(/^(\d+)×/, (_, n) => Math.min(+n, 2) + '×') + ' · freno' }) : it) });
+}
+const diaCorto = d => { const x = parseIso(d); return DIAS[x.getDay()].toLowerCase() + ' ' + x.getDate(); };
 function weekOf(date){ const s = parseIso(settings().start); return Math.max(1, Math.floor((parseIso(date) - s) / 864e5 / 7) + 1); }
 const zone = v => v <= 3 ? 'g' : v === 4 ? 'y' : 'r';
 
@@ -384,7 +412,7 @@ function renderHoy(){
   /* gimnasio: checks por código en log.gym */
   let gymHtml = '';
   if (gym){
-    const gs = gymDay(s.etapa, dow), gl = L.gym || {};
+    const gs = gymSes(s.etapa, state.date), gl = L.gym || {};
     if (!gs.items.length) gymHtml = `<section class="glass pad row"><span class="fnum x">—</span><div style="flex:1;min-width:0"><div class="eyebrow">Gimnasio</div><div style="font-size:16px;font-weight:600;margin-top:3px">${gs.label}</div>${gs.info ? `<div class="note" style="margin-top:3px">${gs.info}</div>` : ''}</div></section>`;
     else {
       const gdone = gs.items.filter(it => gl[itemCode(it)]).length;
@@ -401,6 +429,8 @@ function renderHoy(){
           ${ring(gdone, gs.items.length)}
         </div>
         <div class="info warm">${inline(gym.warm)}</div>
+        ${gs.freno ? `<div class="freno"><b>Freno de agarre hasta el ${diaCorto(iso(addDays(parseIso(gs.freno.m), 6)))}.</b> Después del gimnasio del ${diaCorto(gs.freno.date)} amaneciste en ${gs.freno.v}/10${gs.freno.b != null ? ` (tu base: ${gs.freno.b})` : ''}. En los 🟡: 2 series y sin subir peso (§1).</div>` : ''}
+        ${retroceso(state.date) ? `<div class="freno bad"><b>Dos semanas seguidas amaneciendo peor.</b> ${s.etapa > 1 ? `El plan dice volver a la Etapa ${s.etapa - 1} (§5). <button class="btn ghost" style="margin-top:8px" data-setetapa="${s.etapa - 1}">Volver a la Etapa ${s.etapa - 1}</button>` : 'Ya estás en la Etapa 1: bajá series en los 🟡 y consultá con tu kinesiólogo.'}</div>` : ''}
         <div>${rows}</div>
         ${conSets ? `<div class="divider"></div><div class="eyebrow">Molestia máxima de antebrazo durante el gimnasio</div><div class="scale">${scale('gpain', L.gymPain)}</div>` : ''}
         ${gs.info ? `<div class="info">${gs.info}</div>` : ''}
@@ -979,7 +1009,7 @@ function gNext(code, plus){
 function startGym(code){
   const s = settings();
   try{ audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); }catch(e){ audio = null; }
-  T = { gym: true, ses: gymDay(s.etapa, parseIso(state.date).getDay()), date: state.date, etapa: s.etapa };
+  T = { gym: true, ses: gymSes(s.etapa, state.date), date: state.date, etapa: s.etapa };
   try{ navigator.wakeLock && navigator.wakeLock.request('screen').then(l => { if (T && T.gym) T.lock = l; else l.release(); }).catch(() => {}); }catch(e){}
   if (gItem(code)) showSerie(code);
 }
@@ -989,7 +1019,7 @@ function showSerie(code){
   cancelAnimationFrame(T.raf); T.clock = null;
   const it = gItem(code), f = fichaDe(code) || { name: code, tags: [], body: '' }, secs = !!it.secs, range = it.reps || it.secs, eq = eqDe(code);
   const hoy = setsDia(code, secs, T.date), prev = gPrev(code, secs), k = hoy.length;
-  const prog = progresion(prev && prev.sets, range, eq, secs);
+  const prog = it.freno ? null : progresion(prev && prev.sets, range, eq, secs);
   Object.assign(T, { mode: 'serie', code, prog, edit: null, cur: precarga(k, prev ? prev.sets : [], hoy, prog, range, eq, secs ? 'bw' : unidad(code)) });
   const yellow = f.tags.some(t => t.startsWith('🟡')), p = it.ss && gItem(it.ss);
   const det = [yellow ? 'straps puestos' : '', it.lado ? (/por pierna/.test(it.dose) ? 'por pierna' : 'por lado') : '']

@@ -103,6 +103,8 @@ a{color:var(--accent)}
 .fnum{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--tendon);width:30px;flex:none}
 .fnum.x{color:var(--accent)}
 .info{font-size:13px;color:var(--ink-2);line-height:1.45;padding:10px 0 4px;border-top:1px solid var(--hair)}
+.freno{font-size:13px;line-height:1.45;margin:10px 0 2px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--warn) 18%,transparent)}
+.freno.bad{background:color-mix(in srgb,var(--stop) 14%,transparent)}
 .info.warm{border-top:0;padding:0 0 6px}
 .fnum.g{color:var(--accent)}
 .fold .check{width:30px;height:30px}

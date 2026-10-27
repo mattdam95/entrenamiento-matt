@@ -109,3 +109,7 @@ Ajustes → Copia de seguridad genera un `.json` con esta forma. Es el contrato 
 ---
 
 Orientativo: no reemplaza la indicación de un traumatólogo o kinesiólogo.
+
+### Freno de agarre (§1 del plan de fuerza)
+
+Se calcula, no se guarda. Si el día siguiente a una sesión con series de ejercicios 🟡 el dolor al despertar (`morning`) supera tu línea de base, durante 7 días los 🟡 bajan a 2 series y no se sugiere subir peso. La línea de base es la mediana de los `morning` de los 14 días previos (mínimo 3 registros); si no hay suficientes, se usa 3/10. Si eso pasa dos semanas seguidas, Hoy sugiere volver una etapa.
