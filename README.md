@@ -1,13 +1,13 @@
 # Antebrazos 24
 
-Web app para iPhone del plan de carga progresiva de 24 semanas para tendinopatía de antebrazo, más un plan de fuerza general en el gimnasio atado a sus fases: sesión del día con timer guiado, registro de dolor, registro de cargas con timer de series e historial, peso corporal, fases y etapas, fichas de ejercicios y guía.
+Web app para iPhone del plan de carga progresiva de 24 semanas para tendinopatía de antebrazo, más un plan de fuerza general en el gimnasio atado a sus fases: sesión del día con timer guiado, check-in diario (dolor, sueño, horas de mano), registro de cargas con timer de series e historial, comida y peso corporal, fases y etapas, fichas de ejercicios y guía.
 
 HTML, CSS y JS sin build ni dependencias de npm. La única librería externa es [marked](https://marked.js.org/) (desde cdnjs) para renderizar el plan en Markdown.
 
 ## Estructura
 
 ```
-index.html             página y estructura (pestañas, pantalla de detalle)
+index.html             página y estructura (pestañas Hoy · Comida · Programa · Fichas · Guía, pantalla de detalle)
 css/app.css            estilos (tokens de color claro/oscuro arriba de todo)
 js/app.js              lógica: parseo de los planes, sesiones por fase y etapa, timer, registro, backup
 content/plan.md        el plan de antebrazo completo; fuente de verdad del contenido
@@ -42,8 +42,9 @@ Todo se guarda en `localStorage` del navegador, con el prefijo `ab24:`:
 
 | Clave | Contenido |
 |---|---|
-| `settings` | `{ phase: 0–4, start: "YYYY-MM-DD", sound: bool, etapa: 1–4, food: { batido: bool, creatina: bool } }` (`etapa` es la del gimnasio; si falta vale 1. `food` dice qué checks muestra la tarjeta Comida; si falta vale `{ batido: true, creatina: false }`) |
-| `log:YYYY-MM-DD` | `{ checks: { "<índice>": bool }, gym: { "<código>": bool }, pain: 0–10, morning: 0–10, hours: number, sets: { "<código>": [serie] }, gymPain: 0–10, bw: number, sleep: number, food: { prot: 0–4, batido: bool, creatina: bool } }` |
+| `settings` | `{ phase: 0–4, start: "YYYY-MM-DD", sound: bool, etapa: 1–4, food: { batido: bool, creatina: bool, meta: 100–120 } }` (`etapa` es la del gimnasio; si falta vale 1. `food` dice qué extras muestra la pestaña Comida y la meta de proteína en gramos; si falta vale `{ batido: true, creatina: false, meta: 110 }`) |
+| `log:YYYY-MM-DD` | `{ checks: { "<índice>": bool }, gym: { "<código>": bool }, pain: 0–10, morning: 0–10, hours: number, sets: { "<código>": [serie] }, gymPain: 0–10, bw: number, sleep: number, food: { meals: { d: [plato], a: [], m: [], c: [] }, batido: bool, creatina: bool, gelatina: bool, vitc: bool } }` |
+| `platos` | `[{ id, name, desc, g }]` tus platos para registrar comidas (`desc` es la porción, opcional; `g`, los gramos de proteína aproximados). Si la clave no existe, la app usa los platos iniciales (`PLATOS` en `js/app.js`) |
 | `crit` | `{ "<fase>:<índice>": bool, "g<etapa>:<índice>": bool }` criterios de avance tildados; los del gimnasio llevan el prefijo `g` (por ejemplo `g1:0`) |
 | `seg` | `{ programa: "rehab" \| "gym", fichas: "rehab" \| "gym" }` último segmento elegido en Programa y Fichas |
 | `units` | `{ "<código>": "kg" \| "placas" }` unidad de peso elegida por ejercicio en la pantalla de serie |
@@ -64,7 +65,7 @@ Desde Hoy, el ▶ de cada ejercicio del gimnasio abre la pantalla de serie; cada
 - La unidad por defecto sale del equipo de cada ficha (`EQUIPO` en `js/app.js`): máquinas y poleas en placas (G1, G2, G8, G9, G11, G17, G18), mancuernas en kg (G4, G6, G7, G10, G12), kettlebells en kg (G3, G13, G15, G16) y peso corporal (G5, G19, G20; G14 con lastre de kettlebell). Si se cambia kg/placas en la pantalla de serie, queda en `units`.
 - El historial no se guarda aparte: se calcula recorriendo los `log:` (`allLogs`, `sesionesDe`). Las series por tiempo y por reps de un mismo código (G20: dead bug y plancha) se llevan por separado.
 - Al completar las series previstas, el ejercicio queda tildado en `log.gym`. Al terminar el último de la sesión, la app pregunta la **molestia máxima de antebrazo durante el gimnasio** (0–10) y la guarda en `gymPain`; también se puede cambiar desde la tarjeta del gimnasio en Hoy.
-- `bw` es el peso corporal del día (kg, con un decimal). Hoy muestra el promedio de los últimos 7 días y los promedios de 8 bloques de 7 días; si el promedio no subió 0,3 kg en 3 semanas, sugiere sumar un snack, y si subió más de 2 kg en 4 semanas, sacarlo (§3).
+- `bw` es el peso corporal del día (kg, con un decimal). La pestaña Comida muestra el promedio de los últimos 7 días y los promedios de 8 bloques de 7 días; si el promedio no subió 0,3 kg en 3 semanas, sugiere sumar un snack, y si subió más de 2 kg en 4 semanas, sacarlo (§3).
 
 **Doble progresión** (§3 de `fuerza.md`): toca subir si en la sesión anterior del ejercicio todas las series anotadas llegaron al tope del rango de la sesión de hoy. El salto parte del peso más alto de esa sesión:
 
@@ -77,10 +78,20 @@ Cuando toca subir, la serie arranca con el peso sugerido y el piso del rango; si
 
 - **Rendimiento** (§8 y §3 de `fuerza.md`): un ejercicio está "en baja" si sus dos últimas sesiones bajaron cada una respecto de la anterior (A > B > C), comparando la mejor serie con la misma métrica de "Tu historial" y sólo en la unidad de la última sesión (`enBaja`). No cuenta como baja una sesión hecha con el freno de agarre activo (ejercicios 🟡), ni un cambio de unidad, y cada variante se compara sólo con sesiones de la misma variante (`previasVar`; la variante sale de la dosis de la sesión de ese día de la semana en la etapa actual, por ejemplo "agarre supino" en G1 de Torso B). Lo mismo vale para "Última vez" y "Subí peso". En Hoy, la fila muestra "↓ Bajó"; con 2 o más ejercicios en baja, la tarjeta del gimnasio sugiere revisar sueño y comida (§8) y después la descarga (§3). En la pantalla de serie aparece "no fuerces subir hoy" y no se sugiere subir peso.
 
-### Sueño y comida
+### Hoy: check-in del día
 
-- `sleep` son las horas de sueño de la noche anterior (pasos de 0,5 h, de 0 a 12); la primera tocada propone el último registro, o 7. Si en 3 o más de las últimas 5 noches registradas dormiste menos de 7 h, la tarjeta de registro muestra un aviso con link a la §8. En Programa → Gimnasio, el criterio "Dormís 7 h o más…" de la Etapa 2 muestra el promedio de las últimas 7 noches registradas.
-- `food` es el checklist de la §9 en la tarjeta Comida de Hoy: `prot` cuenta las comidas con 25–35 g de proteína (0–4), `batido` y `creatina` son checks. Batido y creatina sólo se muestran si están activados en Ajustes → Comida (`settings.food`); la creatina viene apagada porque el plan la marca como opcional.
+Debajo del antebrazo y el gimnasio, Hoy tiene un check-in de 4 casillas: **Al despertar** (`morning`, 0–10), **Sueño** (`sleep`), **Dolor máx.** (`pain`, 0–10) y **Mano** (`hours`). Cada una muestra su valor o "—" y abre un sheet con su control (escala o stepper); el de Dolor máx. incluye el gráfico de los últimos 14 días. Abajo, una fila resumen de Comida ("2 de 4 comidas · 55 de 110 g") lleva a la pestaña Comida. La molestia durante el gimnasio (`gymPain`) sigue en la tarjeta del gimnasio.
+
+- `sleep` son las horas de sueño de la noche anterior (pasos de 0,5 h, de 0 a 12); la primera tocada propone el último registro, o 7. Si en 3 o más de las últimas 5 noches registradas dormiste menos de 7 h, aparece un aviso bajo el check-in con link a la §8. En Programa → Gimnasio, el criterio "Dormís 7 h o más…" de la Etapa 2 muestra el promedio de las últimas 7 noches registradas.
+
+### Comida
+
+La pestaña Comida (`#comida`) usa el mismo día elegido en la tira de la semana de Hoy. Tiene el anillo de proteína del día contra `settings.food.meta` (110 g por defecto, 100–120 en Ajustes → Comida, §9), las 4 comidas, los extras, el peso corporal y una guía rápida (qué comer, sin cebolla, pescado ni brócoli, y links a la §9 de fuerza y la §16 del plan).
+
+- `food.meals` tiene una lista por comida (`d` desayuno, `a` almuerzo, `m` merienda, `c` cena). Cada entrada es `{ id, name, g }`: el `id` del plato y una copia de su nombre y sus gramos al momento de registrarlo, así que editar un plato después no cambia los días anteriores. Una comida puede tener varios platos; tocar uno registrado lo marca y tocarlo de nuevo lo quita.
+- "+ Agregar" abre "¿Qué comiste?": se eligen uno o más de tus platos (`platos`) y se suman a la comida. "+ Nuevo" crea un plato (nombre, porción opcional y gramos) y "Editar" permite cambiarlos o borrarlos. Los platos iniciales salen del día tipo de la §16 y de la §9, con gramos aproximados.
+- Extras del día (checks): `batido` y `creatina` si están activados en Ajustes (`settings.food`; la creatina viene apagada porque el plan la marca como opcional), `vitc` (fruta con vitamina C) siempre, y `gelatina` (15 g con jugo de naranja, 45–60 min antes, §16) **sólo los días en que la sesión de antebrazo de la fase actual tiene ejercicios de fuerza (F4 o F5)**. Esos mismos días el encabezado dice "día de fuerza".
+- Compatibilidad: los logs anteriores tienen `food.prot` (comidas con 25–35 g de proteína, 0–4) y no `meals`. La app lo muestra como "N comidas con proteína (registro anterior)", sin gramos, y no lo borra; al registrar una comida en ese día se agrega `meals` y `prot` queda guardado.
 
 ### Plan de fuerza
 
@@ -98,7 +109,7 @@ Para curarlos: el usuario marca cada video con **Sirve** o **No sirve** desde la
 
 ### Formato del backup
 
-Ajustes → Copia de seguridad genera un `.json` con esta forma. Es el contrato a respetar si se migra a otra tecnología, para poder restaurar backups viejos. Exporta todas las claves `ab24:`, así que las claves y campos nuevos (`settings.etapa`, `log.gym`, `log.sets`, `log.gymPain`, `log.bw`, `log.sleep`, `log.food`, `settings.food`, `units`, criterios `g…`, `seg`) viajan solos sin cambiar `version: 1`:
+Ajustes → Copia de seguridad genera un `.json` con esta forma. Es el contrato a respetar si se migra a otra tecnología, para poder restaurar backups viejos. Exporta todas las claves `ab24:`, así que las claves y campos nuevos (`settings.etapa`, `log.gym`, `log.sets`, `log.gymPain`, `log.bw`, `log.sleep`, `log.food`, `settings.food`, `platos`, `units`, criterios `g…`, `seg`) viajan solos sin cambiar `version: 1`:
 
 ```json
 {
