@@ -347,7 +347,7 @@ const setsDia = (code, secs, date) => (((log(date).sets || {})[code]) || []).fil
 const previas = (code, secs, date) => sesionesDe(allLogs().filter(x => x.date < date), code, secs);
 function progDe(it, date){
   if (it.freno) return null;
-  const p = previas(it.g, it.secs, date), pr = progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs);
+  const p = previasVar(it.g, it.secs, date), pr = progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs);
   return pr && pr.kind === 'peso' && bajaDe(it, date) ? null : pr;
 }
 const unidad = code => store.get('units', {})[code];
@@ -356,7 +356,14 @@ function varDe(code, date){
   const it = gymDay(settings().etapa, parseIso(date).getDay()).items.find(x => x.g === code);
   return it ? it.dose.split(' · ').filter(x => !/\d+×|^\d+\s*s$|superserie/.test(x)).join(' · ') : null;
 }
-const bajaDe = (it, date) => !!it.g && enBaja(previas(it.g, it.secs, date).map(x => Object.assign({}, x, { freno: esAmarillo(it.g) && !!frenoEn(x.date), var: varDe(it.g, x.date) })));
+/* sesiones anteriores de la misma variante que la de ese día (G1: agarre normal en Torso A, supino en Torso B);
+   las de variante desconocida cuentan para cualquiera */
+function previasVar(code, secs, date){
+  const all = previas(code, secs, date).map(x => Object.assign({}, x, { var: varDe(code, x.date) }));
+  const v = varDe(code, date) ?? (all.length ? all[all.length-1].var : null);
+  return v == null ? all : all.filter(x => x.var == null || x.var === v);
+}
+const bajaDe = (it, date) => !!it.g && enBaja(previasVar(it.g, it.secs, date).map(x => Object.assign({}, x, { freno: esAmarillo(it.g) && !!frenoEn(x.date) })));
 /* noches registradas hasta una fecha */
 const noches = hasta => allLogs().filter(x => x.date <= hasta && typeof x.L.sleep === 'number').map(x => ({ date:x.date, sleep:x.L.sleep }));
 const foodCfg = () => Object.assign({ batido:true, creatina:false }, settings().food);
@@ -1091,7 +1098,7 @@ function startGym(code){
   try{ navigator.wakeLock && navigator.wakeLock.request('screen').then(l => { if (T && T.gym) T.lock = l; else l.release(); }).catch(() => {}); }catch(e){}
   if (gItem(code)) showSerie(code);
 }
-function gPrev(code, secs){ const p = previas(code, secs, T.date); return p.length ? p[p.length-1] : null; }
+function gPrev(code, secs){ const p = previasVar(code, secs, T.date); return p.length ? p[p.length-1] : null; }
 const soundChip = () => `<div class="row" style="justify-content:center"><button class="chip" style="background:var(--fill)" data-sound id="gsound">Sonido: ${settings().sound ? 'activado' : 'silenciado'}</button></div>`;
 function showSerie(code){
   cancelAnimationFrame(T.raf); T.clock = null;
