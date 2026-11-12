@@ -517,7 +517,7 @@ jueves (Etapa 1: viernes) · ≈55 min
 - G1 Jalón al pecho, agarre supino `3×10–12 · 120 s`
 - G9 Apertura en polea `2×12–15 por lado · 60 s`
 - G25 Elevación lateral en polea `3×12–20 por lado · 60 s`
-- Superserie G8 Face pull + G23 Curl concentrado `2×12–20 · 60 s`
+- Superserie G8 Face pull `2×15–20` + G23 Curl concentrado `2×10–15 por lado` · 60 s
 
 ### Piernas A
 
