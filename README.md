@@ -42,8 +42,8 @@ Todo se guarda en `localStorage` del navegador, con el prefijo `ab24:`:
 
 | Clave | Contenido |
 |---|---|
-| `settings` | `{ phase: 0–4, start: "YYYY-MM-DD", sound: bool, etapa: 1–4 }` (`etapa` es la del gimnasio; si falta vale 1) |
-| `log:YYYY-MM-DD` | `{ checks: { "<índice>": bool }, gym: { "<código>": bool }, pain: 0–10, morning: 0–10, hours: number, sets: { "<código>": [serie] }, gymPain: 0–10, bw: number }` |
+| `settings` | `{ phase: 0–4, start: "YYYY-MM-DD", sound: bool, etapa: 1–4, food: { batido: bool, creatina: bool } }` (`etapa` es la del gimnasio; si falta vale 1. `food` dice qué checks muestra la tarjeta Comida; si falta vale `{ batido: true, creatina: false }`) |
+| `log:YYYY-MM-DD` | `{ checks: { "<índice>": bool }, gym: { "<código>": bool }, pain: 0–10, morning: 0–10, hours: number, sets: { "<código>": [serie] }, gymPain: 0–10, bw: number, sleep: number, food: { prot: 0–4, batido: bool, creatina: bool } }` |
 | `crit` | `{ "<fase>:<índice>": bool, "g<etapa>:<índice>": bool }` criterios de avance tildados; los del gimnasio llevan el prefijo `g` (por ejemplo `g1:0`) |
 | `seg` | `{ programa: "rehab" \| "gym", fichas: "rehab" \| "gym" }` último segmento elegido en Programa y Fichas |
 | `units` | `{ "<código>": "kg" \| "placas" }` unidad de peso elegida por ejercicio en la pantalla de serie |
@@ -75,9 +75,18 @@ Desde Hoy, el ▶ de cada ejercicio del gimnasio abre la pantalla de serie; cada
 
 Cuando toca subir, la serie arranca con el peso sugerido y el piso del rango; si no, con lo de la misma serie la última vez. Las superseries (`ss`) alternan una serie de cada ejercicio y descansan después del segundo. "Tu historial" en la ficha usa como métrica el 1RM estimado de Epley (`w × (1 + r/30)`) en la unidad más usada en las últimas 8 sesiones (en peso corporal y por tiempo, las reps o los segundos).
 
+- **Rendimiento** (§8 y §3 de `fuerza.md`): un ejercicio está "en baja" si sus dos últimas sesiones bajaron cada una respecto de la anterior (A > B > C), comparando la mejor serie con la misma métrica de "Tu historial" y sólo en la unidad de la última sesión (`enBaja`). No cuenta como baja una sesión hecha con el freno de agarre activo (ejercicios 🟡), ni un cambio de unidad, ni un cambio de variante (la variante sale de la dosis de la sesión de ese día de la semana en la etapa actual, por ejemplo "agarre supino" en G1 de Torso B). En Hoy, la fila muestra "↓ Bajó"; con 2 o más ejercicios en baja, la tarjeta del gimnasio sugiere revisar sueño y comida (§8) y después la descarga (§3). En la pantalla de serie aparece "no fuerces subir hoy" y no se sugiere subir peso.
+
+### Sueño y comida
+
+- `sleep` son las horas de sueño de la noche anterior (pasos de 0,5 h, de 0 a 12); la primera tocada propone el último registro, o 7. Si en 3 o más de las últimas 5 noches registradas dormiste menos de 7 h, la tarjeta de registro muestra un aviso con link a la §8. En Programa → Gimnasio, el criterio "Dormís 7 h o más…" de la Etapa 2 muestra el promedio de las últimas 7 noches registradas.
+- `food` es el checklist de la §9 en la tarjeta Comida de Hoy: `prot` cuenta las comidas con 25–35 g de proteína (0–4), `batido` y `creatina` son checks. Batido y creatina sólo se muestran si están activados en Ajustes → Comida (`settings.food`); la creatina viene apagada porque el plan la marca como opcional.
+
 ### Plan de fuerza
 
 `content/fuerza.md` se carga en paralelo con `plan.md` y se parsea igual: secciones `## N · Título`, fichas `#### Gn · Nombre` en la §4 (agrupadas por los `### Torso` / `### Piernas y core`), etapas en la §5 (línea con el número + `###`, como las fases) y la entrada en calor de la §6. La línea en cursiva bajo cada ficha trae el nombre en inglés y los tags; el semáforo 🟢/🟡 se muestra como tag de color. Si el archivo no carga, la app funciona igual sin el gimnasio.
+
+En Fichas → Gimnasio, las fichas que no aparecen en ninguna sesión de `GYM` (se calcula, `EN_SESION`) van a un grupo final **Alternativas**, y su ficha lleva el tag "Alternativa". Su historial y sus videos funcionan igual.
 
 Las sesiones por etapa y día (`GYM` en `js/app.js`) son datos puros: cada ejercicio es `{ g: "G4", dose: "3×8–12 · 120 s", sets: 3, reps: [8, 12], rest: 120 }` (con `secs` en vez de `reps` si la serie es por tiempo, `lado: true` si es por lado o por pierna y `ss` con el código de su pareja de superserie). Esos valores numéricos son los que usa el registro de cargas y el timer de series. La etapa elegida se compara con la fase de antebrazo (`ETAPA_FASE`) para mostrar un aviso en Ajustes si no coinciden.
 
@@ -89,7 +98,7 @@ Para curarlos: el usuario marca cada video con **Sirve** o **No sirve** desde la
 
 ### Formato del backup
 
-Ajustes → Copia de seguridad genera un `.json` con esta forma. Es el contrato a respetar si se migra a otra tecnología, para poder restaurar backups viejos. Exporta todas las claves `ab24:`, así que las claves y campos nuevos (`settings.etapa`, `log.gym`, `log.sets`, `log.gymPain`, `log.bw`, `units`, criterios `g…`, `seg`) viajan solos sin cambiar `version: 1`:
+Ajustes → Copia de seguridad genera un `.json` con esta forma. Es el contrato a respetar si se migra a otra tecnología, para poder restaurar backups viejos. Exporta todas las claves `ab24:`, así que las claves y campos nuevos (`settings.etapa`, `log.gym`, `log.sets`, `log.gymPain`, `log.bw`, `log.sleep`, `log.food`, `settings.food`, `units`, criterios `g…`, `seg`) viajan solos sin cambiar `version: 1`:
 
 ```json
 {

@@ -205,6 +205,8 @@ const gymDay = (etapa, dow) => { const s = GYM[etapa][dow]; return s.items.lengt
 /* qué fases de antebrazo corresponden a cada etapa */
 const ETAPA_FASE = { 1:[2], 2:[3], 3:[3,4], 4:[4] };
 const itemCode = it => it.g || 'F' + it.f;
+/* fichas G que entran en alguna sesión; las demás se listan como "Alternativas" */
+const EN_SESION = new Set(Object.values(GYM).flatMap(d => d.flatMap(s => s.items.map(it => it.g).filter(Boolean))));
 
 /* ---------- registro de cargas: lógica pura (sin DOM ni store) ---------- */
 /* equipo por ficha (§2 y §4): maq = máquina o polea (placas), mancu = mancuernas, kb = kettlebell,
@@ -302,6 +304,19 @@ function fmtDiff(d, u, secs){
   return d ? sg + fmtW(a, u) : 'Mismo peso que la primera sesión';
 }
 const fechaCorta = d => { const x = parseIso(d); return `${DABR[x.getDay()]} ${x.getDate()}`; };
+/* rendimiento (§8 y §3): en baja si las dos últimas sesiones bajaron cada una (A > B > C, mejor serie en la misma unidad).
+   ses: [{ date, sets, freno, var }]; una sesión con freno de agarre o un cambio de variante no cuenta como baja */
+function enBaja(ses){
+  if (ses.length < 3) return false;
+  const [a, b, c] = ses.slice(-3), cambio = (x, y) => x.var != null && y.var != null && x.var !== y.var;
+  if (b.freno || c.freno || cambio(a, b) || cambio(b, c)) return false;
+  const u = mejorSerie(c.sets).u, m = x => { const s = mejorSerie(x.sets.filter(s => s.u === u)); return s ? metrica(s) : null; };
+  const ma = m(a), mb = m(b), mc = m(c);
+  return ma != null && mb != null && mb < ma && mc < mb;
+}
+/* sueño (§8): regs [{ date, sleep }] en orden; aviso si 3 o más de las últimas 5 noches registradas fueron de menos de 7 h */
+function suenoCorto(regs){ const u = regs.slice(-5), n = u.filter(x => x.sleep < 7).length; return n >= 3 ? { n, de: u.length } : null; }
+const promSueno = (regs, n) => { const u = regs.slice(-n); return u.length ? { v: u.reduce((a, x) => a + x.sleep, 0) / u.length, n: u.length } : null; };
 /* ---------- fin de la lógica pura ---------- */
 
 /* ---------- estado ---------- */
@@ -330,8 +345,21 @@ function allLogs(){
 /* registro de cargas: series de un día, sesiones anteriores y si toca subir */
 const setsDia = (code, secs, date) => (((log(date).sets || {})[code]) || []).filter(s => !!s.secs === !!secs);
 const previas = (code, secs, date) => sesionesDe(allLogs().filter(x => x.date < date), code, secs);
-function progDe(it, date){ if (it.freno) return null; const p = previas(it.g, it.secs, date); return progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs); }
+function progDe(it, date){
+  if (it.freno) return null;
+  const p = previas(it.g, it.secs, date), pr = progresion(p.length ? p[p.length-1].sets : null, it.reps || it.secs, eqDe(it.g), !!it.secs);
+  return pr && pr.kind === 'peso' && bajaDe(it, date) ? null : pr;
+}
 const unidad = code => store.get('units', {})[code];
+/* variante de un ejercicio en la sesión de ese día de la semana (etapa actual): "agarre supino", "liviano"…; null si no está */
+function varDe(code, date){
+  const it = gymDay(settings().etapa, parseIso(date).getDay()).items.find(x => x.g === code);
+  return it ? it.dose.split(' · ').filter(x => !/\d+×|^\d+\s*s$|superserie/.test(x)).join(' · ') : null;
+}
+const bajaDe = (it, date) => !!it.g && enBaja(previas(it.g, it.secs, date).map(x => Object.assign({}, x, { freno: esAmarillo(it.g) && !!frenoEn(x.date), var: varDe(it.g, x.date) })));
+/* noches registradas hasta una fecha */
+const noches = hasta => allLogs().filter(x => x.date <= hasta && typeof x.L.sleep === 'number').map(x => ({ date:x.date, sleep:x.L.sleep }));
+const foodCfg = () => Object.assign({ batido:true, creatina:false }, settings().food);
 /* freno de agarre (§1): si después de un día con series de 🟡 amanecés por encima de tu base,
    por 7 días los 🟡 van a 2 series y sin subir peso; dos semanas seguidas así → volver una etapa */
 const esAmarillo = code => ((fichaDe(code) || {}).tags || []).some(t => t.startsWith('🟡'));
@@ -418,11 +446,13 @@ function renderHoy(){
     if (!gs.items.length) gymHtml = `<section class="glass pad row"><span class="fnum x">—</span><div style="flex:1;min-width:0"><div class="eyebrow">Gimnasio</div><div style="font-size:16px;font-weight:600;margin-top:3px">${gs.label}</div>${gs.info ? `<div class="note" style="margin-top:3px">${gs.info}</div>` : ''}</div></section>`;
     else {
       const gdone = gs.items.filter(it => gl[itemCode(it)]).length;
-      /* registro de cargas: chip "↑ Subí" si toca subir y las series de hoy bajo la dosis */
+      /* registro de cargas: chip "↑ Subí" si toca subir, "↓ Bajó" si las dos últimas sesiones bajaron, y las series de hoy bajo la dosis */
+      let bajas = 0;
       const rows = gs.items.map(it => {
         const c = itemCode(it), on = !!gl[c], name = it.g ? (fichaDe(c) || {}).name || c : F[it.f];
-        const up = it.g && progDe(it, state.date), hoy = it.g ? setsDia(c, it.secs, state.date) : [];
-        return `<div class="ex ${on?'done':''}"><button class="exinfo" data-ficha="${c}" aria-label="Ver ficha de ${esc(name)}"><span class="fnum ${it.g?'g':''}">${c}</span><div style="flex:1;min-width:0"><div class="name">${esc(name)}${up ? '<span class="upchip">↑ Subí</span>' : ''}<span class="more" aria-hidden="true"> ›</span></div><div class="dose mono">${it.dose}</div>${hoy.length ? `<div class="dose mono done-sets">${esc(fmtSets(hoy))}</div>` : ''}</div></button>${it.g ? `<button class="play" data-gplay="${c}" aria-label="Series de ${esc(name)}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>` : ''}<button class="checkbtn" data-gcheck="${c}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
+        const up = it.g && progDe(it, state.date), down = bajaDe(it, state.date), hoy = it.g ? setsDia(c, it.secs, state.date) : [];
+        if (down) bajas++;
+        return `<div class="ex ${on?'done':''}"><button class="exinfo" data-ficha="${c}" aria-label="Ver ficha de ${esc(name)}"><span class="fnum ${it.g?'g':''}">${c}</span><div style="flex:1;min-width:0"><div class="name">${esc(name)}${up ? '<span class="upchip">↑ Subí</span>' : ''}${down ? '<span class="upchip down">↓ Bajó</span>' : ''}<span class="more" aria-hidden="true"> ›</span></div><div class="dose mono">${it.dose}</div>${hoy.length ? `<div class="dose mono done-sets">${esc(fmtSets(hoy))}</div>` : ''}</div></button>${it.g ? `<button class="play" data-gplay="${c}" aria-label="Series de ${esc(name)}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg></button>` : ''}<button class="checkbtn" data-gcheck="${c}" aria-pressed="${on}" aria-label="Marcar hecho"><span class="check"></span></button></div>`;
       }).join('');
       const conSets = Object.values(L.sets || {}).some(a => a.length) || L.gymPain != null;
       gymHtml = `<section class="glass pad">
@@ -433,6 +463,7 @@ function renderHoy(){
         <button class="info warm warmbtn" data-section="g7"><b>Entrada en calor</b> · ${warmDe(gs)}<span class="more" aria-hidden="true"> ›</span></button>
         ${gs.freno ? `<div class="freno"><b>Freno de agarre hasta el ${diaCorto(iso(addDays(parseIso(gs.freno.m), 6)))}.</b> Después del gimnasio del ${diaCorto(gs.freno.date)} amaneciste en ${gs.freno.v}/10${gs.freno.b != null ? ` (tu base: ${gs.freno.b})` : ''}. En los 🟡: 2 series y sin subir peso (§1).</div>` : ''}
         ${retroceso(state.date) ? `<div class="freno bad"><b>Dos semanas seguidas amaneciendo peor.</b> ${s.etapa > 1 ? `El plan dice volver a la Etapa ${s.etapa - 1} (§5). <button class="btn ghost" style="margin-top:8px" data-setetapa="${s.etapa - 1}">Volver a la Etapa ${s.etapa - 1}</button>` : 'Ya estás en la Etapa 1: bajá series en los 🟡 y consultá con tu kinesiólogo.'}</div>` : ''}
+        ${bajas >= 2 ? `<div class="freno">Bajaste en ${bajas} ejercicios dos sesiones seguidas: primero revisá sueño y comida (<button class="lnk" data-section="g8">§8</button>); si sigue, hacé la descarga (<button class="lnk" data-section="g3">§3</button>).</div>` : ''}
         <div>${rows}</div>
         ${conSets ? `<div class="divider"></div><div class="eyebrow">Molestia máxima de antebrazo durante el gimnasio</div><div class="scale">${scale('gpain', L.gymPain)}</div>` : ''}
         ${gs.info ? `<div class="info">${gs.info}</div>` : ''}
@@ -445,6 +476,7 @@ function renderHoy(){
     : pain <= 3 ? 'Dentro de lo aceptable. Si mañana estás en tu línea de base, cuenta para subir.'
     : pain === 4 ? 'Mantené: no subas carga hasta que vuelva a ≤3/10.'
     : 'Por encima del límite. Bajá un escalón: peso o nivel anterior (§9).';
+  const sueno = suenoCorto(noches(state.date));
 
   /* últimos 14 días */
   const hist = [...Array(14)].map((_, i) => { const dd = iso(addDays(parseIso(todayIso), i-13)); return { dd, v: log(dd).pain }; });
@@ -453,7 +485,7 @@ function renderHoy(){
   $view.innerHTML = `
     ${head(`${DIAS[dow]} ${d.getDate()} ${MESES[d.getMonth()]}`, isToday ? 'Hoy' : DIAS[dow],
       `<button class="chip glass" data-settings><span class="dot"></span>F${s.phase}${gym ? ` · Etapa ${s.etapa}` : ''} · sem ${weekOf(state.date)}</button>`)}
-    <div class="week glass">${days.map(x => { const k = iso(x), lk = log(k), has = lk.pain != null || lk.bw != null || Object.values(lk.checks||{}).some(Boolean) || Object.values(lk.gym||{}).some(Boolean) || Object.values(lk.sets||{}).some(a => a.length);
+    <div class="week glass">${days.map(x => { const k = iso(x), lk = log(k), has = lk.pain != null || lk.bw != null || lk.sleep != null || (lk.food && (lk.food.prot || lk.food.batido || lk.food.creatina)) || Object.values(lk.checks||{}).some(Boolean) || Object.values(lk.gym||{}).some(Boolean) || Object.values(lk.sets||{}).some(a => a.length);
       return `<button class="day ${k===todayIso?'today':''}" data-date="${k}" aria-pressed="${k===state.date}">${DCORTO[x.getDay()]}<b>${x.getDate()}</b><i class="${has?'has':''}"></i></button>`; }).join('')}</div>
     ${rehabHtml}
     ${gymHtml}
@@ -467,7 +499,12 @@ function renderHoy(){
       <div class="divider"></div>
       <div class="row between"><div><div class="eyebrow">Horas de mano</div><div class="note" style="margin-top:3px">Trabajo + juego + piano + celular</div></div>
         <div class="stepper"><button data-hours="-0.5" aria-label="Menos media hora">−</button><output class="mono">${hours}</output><button data-hours="0.5" aria-label="Más media hora">+</button></div></div>
+      <div class="divider"></div>
+      <div class="row between"><div><div class="eyebrow">Horas de sueño (anoche)</div><div class="note" style="margin-top:3px">Meta: 7–8 h</div></div>
+        <div class="stepper"><button data-sleep="-0.5" aria-label="Menos media hora de sueño">−</button><output class="mono">${L.sleep != null ? num(L.sleep) : '—'}</output><button data-sleep="0.5" aria-label="Más media hora de sueño">+</button></div></div>
+      ${sueno ? `<div class="note alert">En ${sueno.n} de tus últimas ${sueno.de} noches dormiste menos de 7 h. El sueño pesa tanto como entrenar: revisalo antes de subir carga${gym ? ` (<button class="lnk" data-section="g8">§8</button>)` : ''}.</div>` : ''}
     </section>
+    ${foodCard(L)}
     <section class="glass pad">
       <div class="row between"><div class="eyebrow">Dolor · últimos 14 días</div><span class="mono muted" style="font-size:12px">0–10</span></div>
       <div class="chart"><span class="lim" style="bottom:${3.5*10}%"></span>${bars}</div>
@@ -481,6 +518,20 @@ function renderHoy(){
 const warmDe = ses => /^piernas/.test(ses.id || '')
   ? '6–10 min de bici, movilidad dinámica de piernas y 1–2 series de aproximación del primero con la mitad del peso.'
   : '5–10 min de cinta o bici si llegás frío, movilidad de hombros, escápulas y manguito con banda, y 1–2 series de aproximación del primero.';
+/* comida (§9 de fuerza.md): log.food = { prot: 0–4, batido, creatina }; batido y creatina se muestran según settings.food */
+function foodCard(L){
+  if (!gym) return '';
+  const fd = L.food || {}, cfg = foodCfg(), p = fd.prot || 0;
+  const chk = (attr, on, label) => `<button class="checkbtn" ${attr} aria-pressed="${on}" aria-label="${label}"><span class="check ${on ? 'done' : ''}"></span></button>`;
+  return `<section class="glass pad">
+      <div class="eyebrow">Comida</div>
+      <div class="field" style="border-top:0;padding-top:8px"><span>Comidas con proteína <span class="muted">(25–35 g)</span></span>
+        <div class="row" style="gap:12px">${[1,2,3,4].map(i => chk(`data-prot="${i}"`, i <= p, `${i} de 4 comidas`)).join('')}</div></div>
+      ${cfg.batido ? `<div class="field"><span>Batido <span class="muted">leche, banana, avena y pasta de maní</span></span>${chk('data-food="batido"', !!fd.batido, 'Batido')}</div>` : ''}
+      ${cfg.creatina ? `<div class="field"><span>Creatina 3–5 g</span>${chk('data-food="creatina"', !!fd.creatina, 'Creatina')}</div>` : ''}
+      <div class="note">Meta: 100–120 g de proteína por día, en 4 comidas (<button class="lnk" data-section="g9">§9</button>).</div>
+    </section>`;
+}
 /* peso corporal (§9 y §10 de fuerza.md): bw en el log del día, promedio de 7 días y promedios semanales */
 function bwCard(L){
   const regs = allLogs().filter(x => typeof x.L.bw === 'number').map(x => ({ date:x.date, bw:x.L.bw }));
@@ -563,7 +614,10 @@ function phaseBody(f, crit, prefix){
         [...ul.children].forEach((li, i) => {
           const k = (prefix || '')+f.n+':'+i;
           li.dataset.crit = k;
-          li.innerHTML = `<span class="check ${crit[k]?'done':''}"></span><span>${li.innerHTML}</span>`;
+          /* "Dormís 7 h o más…": al lado, el promedio de las últimas 7 noches registradas */
+          const ps = prefix === 'g' && /^Dormís/.test(li.textContent) && promSueno(noches(todayIso), 7);
+          const dato = ps ? ` <span class="crit-dato mono">· ${ps.n === 7 ? 'últimas 7 noches' : ps.n === 1 ? 'última noche' : `últimas ${ps.n} noches`}: ${num(ps.v, 1)} h</span>` : '';
+          li.innerHTML = `<span class="check ${crit[k]?'done':''}"></span><span>${li.innerHTML}${dato}</span>`;
         });
       }
     } else if (/^(Retroced|Volvés)/.test(t)) st.className = 'lbl-bad';
@@ -578,12 +632,16 @@ function renderFichas(){
       <button class="li" data-ficha="${f.code}"><span class="badge ${f.code[0] === 'G' ? 'g' : ''}">${f.code}</span>
         <div style="flex:1;min-width:0"><div class="t">${esc(f.name)}</div><div class="s">${esc(sub)}</div></div><span class="chev">›</span></button>`;
   if (state.seg.fichas === 'gym'){
-    const groups = [...new Set(gym.fichas.map(f => f.group))];
+    const usadas = gym.fichas.filter(f => EN_SESION.has(f.code)), alt = gym.fichas.filter(f => !EN_SESION.has(f.code));
+    const groups = [...new Set(usadas.map(f => f.group))];
+    const fli = f => li(f, f.tags.concat(nvids(f.code)).join(' · '));
     $view.innerHTML = `
       ${head(gym.fichas.length + ' ejercicios · gimnasio', 'Fichas')}
       ${segCtl('fichas', 'Recuperación')}
       ${groups.map(g => `<div class="eyebrow group-eb">${esc(g || 'Ejercicios')}</div>
-      <section class="glass list">${gym.fichas.filter(f => f.group === g).map(f => li(f, f.tags.concat(nvids(f.code)).join(' · '))).join('')}</section>`).join('')}
+      <section class="glass list">${usadas.filter(f => f.group === g).map(fli).join('')}</section>`).join('')}
+      ${alt.length ? `<div class="eyebrow group-eb">Alternativas</div>
+      <section class="glass list"><div class="note group-note">No están en ninguna sesión: usalas cuando la polea esté ocupada o para variar.</div>${alt.map(fli).join('')}</section>` : ''}
       <section class="glass pad md">${md(gym.fichaIntro)}</section>`;
     return;
   }
@@ -699,7 +757,7 @@ function showFicha(code){
   const body = f.body.replace(/^- \*\*Dosis\*\* — .*$/m, '');
   const vids = videosDe(code).length;
   openSheet(state.tab === 'hoy' ? 'Hoy' : 'Fichas', `
-    <section class="glass hero"><div class="tags"><span class="tag">Ficha ${code[0] === 'G' ? code : f.n} de ${list.length}</span>${tags}</div>
+    <section class="glass hero"><div class="tags"><span class="tag">Ficha ${code[0] === 'G' ? code : f.n} de ${list.length}</span>${code[0] === 'G' && !EN_SESION.has(code) ? '<span class="tag alt">Alternativa</span>' : ''}${tags}</div>
       <h2>${esc(f.name)}</h2><div class="en">${esc(f.en)}</div></section>
     ${f.dose ? `<section class="glass dosecard md"><div class="eyebrow" style="margin-bottom:6px">Dosis</div>${inline(f.dose)}</section>` : ''}
     ${code[0] === 'G' ? `<section class="glass pad" id="ghist">${histCard(code)}</section>` : ''}
@@ -754,7 +812,7 @@ function markVideo(url, mark){
 function showSection(id){
   const g = id[0] === 'g', s = guiaGroups()[g ? 1 : 0].items.find(x => x.id === id);
   if (!s) return;
-  const back = state.tab === 'programa' ? 'Programa' : 'Guía';
+  const back = { programa:'Programa', hoy:'Hoy' }[state.tab] || 'Guía';
   const eb = [g ? 'Gimnasio' : '', s.n ? '§'+s.n : ''].filter(Boolean).join(' · ');
   openSheet(back, `<div>${eb?`<div class="eyebrow">${eb}</div>`:''}<h1 class="large" style="font-size:30px;text-wrap:balance">${esc(s.title)}</h1></div>
     <section class="glass pad md">${md(s.body)}</section>`);
@@ -776,10 +834,15 @@ function showSettings(){
       <div class="seg" style="margin-top:10px">${[1,2,3,4].map(p => `<button data-setetapa="${p}" aria-pressed="${s.etapa===p}">${p}</button>`).join('')}</div>
       <div class="note">${esc(gym.etapas.find(e => e.n === s.etapa)?.title || '')}. Corresponde a la Fase ${fasesDe} del antebrazo.</div>
       ${etapaOk(s) ? '' : `<div class="note alert">Estás en Fase ${s.phase} del antebrazo: esta etapa va con la Fase ${fasesDe}. Revisá los criterios en Programa antes de sumar carga.</div>`}
+    </section>
+    <section class="glass pad cfg">
+      <div class="eyebrow">Comida</div>
+      ${[['batido', 'Batido diario'], ['creatina', 'Creatina']].map(([k, t]) => `<div class="field"><span>${t}</span><button class="switch" data-foodset="${k}" aria-pressed="${foodCfg()[k]}" aria-label="${t}"></button></div>`).join('')}
+      <div class="note">Qué checks muestra la tarjeta Comida de Hoy. La creatina es opcional en el plan (§9).</div>
     </section>` : ''}
     <section class="glass pad">
       <div class="eyebrow">Copia de seguridad</div>
-      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, cargas del gimnasio, peso corporal, criterios, fase, etapa del gimnasio, fecha de inicio y la validación de los videos. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
+      <div class="note">Guarda en un archivo .json tus registros de dolor, tildes, cargas del gimnasio, peso corporal, sueño, comida, criterios, fase, etapa del gimnasio, fecha de inicio y la validación de los videos. Si perdés la web o cambiás de teléfono, lo restaurás desde acá.</div>
       <div class="note" style="margin-top:4px">${backupAge()}</div>
       <div class="row" style="flex-wrap:wrap;margin-top:14px">
         <button class="btn" data-export>Guardar backup</button>
@@ -1034,7 +1097,7 @@ function showSerie(code){
   cancelAnimationFrame(T.raf); T.clock = null;
   const it = gItem(code), f = fichaDe(code) || { name: code, tags: [], body: '' }, secs = !!it.secs, range = it.reps || it.secs, eq = eqDe(code);
   const hoy = setsDia(code, secs, T.date), prev = gPrev(code, secs), k = hoy.length;
-  const prog = it.freno ? null : progresion(prev && prev.sets, range, eq, secs);
+  const baja = bajaDe(it, T.date), p0 = it.freno ? null : progresion(prev && prev.sets, range, eq, secs), prog = baja && p0 && p0.kind === 'peso' ? null : p0;
   Object.assign(T, { mode: 'serie', code, prog, edit: null, cur: precarga(k, prev ? prev.sets : [], hoy, prog, range, eq, secs ? 'bw' : unidad(code)) });
   const yellow = f.tags.some(t => t.startsWith('🟡')), p = it.ss && gItem(it.ss);
   const det = [yellow ? 'straps puestos' : '', it.lado ? (/por pierna/.test(it.dose) ? 'por pierna' : 'por lado') : '']
@@ -1045,7 +1108,8 @@ function showSerie(code){
   openSheet('Salir', `<div class="tm-pills" aria-hidden="true">${pills}</div>
     <section class="glass pad gs-goal"><div class="eyebrow">${code} · ${esc(f.name)} · serie ${k + 1}${k < it.sets ? ' de ' + it.sets : ' · extra'}</div>
       <div class="gs-range">${range[0] === range[1] ? range[0] : range[0] + '–' + range[1]}${secs ? '<small>s</small>' : ''}</div>
-      ${det.length ? `<div class="gs-det">${esc(det.join(' · '))}</div>` : ''}</section>
+      ${det.length ? `<div class="gs-det">${esc(det.join(' · '))}</div>` : ''}
+      ${baja ? '<div class="note gs-baja">Las dos últimas sesiones bajaron: no fuerces subir hoy.</div>' : ''}</section>
     <section class="glass pad row between gs-last">
       <div><div class="eyebrow">Última vez${prev ? ' · ' + fechaCorta(prev.date) : ''}</div><div class="mono gs-sets">${prev ? esc(fmtSets(prev.sets)) : 'Primera vez'}</div></div>
       <div style="text-align:right"><div class="eyebrow">Hoy</div><div class="mono gs-sets" id="ghoy">${hoy.length ? esc(fmtSets(hoy)) : '—'}</div></div></section>
@@ -1239,6 +1303,11 @@ document.addEventListener('click', e => {
   if (ds.check != null){ const L = log(state.date), c = L.checks || {}; c[ds.check] = !c[ds.check]; setLog(state.date, { checks:c }); render(); return; }
   if (ds.pain != null){ const v = +ds.pain; setLog(state.date, { pain: log(state.date).pain === v ? null : v }); render(); return; }
   if (ds.morning != null){ const v = +ds.morning; setLog(state.date, { morning: log(state.date).morning === v ? null : v }); render(); return; }
+  if (ds.sleep){ const cur = log(state.date).sleep, last = [...allLogs()].reverse().find(x => x.date < state.date && typeof x.L.sleep === 'number');
+    setLog(state.date, { sleep: cur == null ? (last ? last.L.sleep : 7) : Math.max(0, Math.min(12, cur + +ds.sleep)) }); render(); return; }
+  if (ds.prot){ const fd = Object.assign({}, log(state.date).food), v = +ds.prot; fd.prot = (fd.prot || 0) === v ? v - 1 : v; setLog(state.date, { food: fd }); render(); return; }
+  if (ds.food){ const fd = Object.assign({}, log(state.date).food); fd[ds.food] = !fd[ds.food]; setLog(state.date, { food: fd }); render(); return; }
+  if (ds.foodset){ const s = settings(); s.food = Object.assign(foodCfg(), { [ds.foodset]: !foodCfg()[ds.foodset] }); store.set('settings', s); render(); showSettings(); return; }
   if (ds.hours){ const h = Math.max(0, Math.min(18, (log(state.date).hours || 0) + +ds.hours)); setLog(state.date, { hours:h }); render(); return; }
   if (ds.phase != null){ const n = +ds.phase; state.openPhase = state.openPhase === n ? -1 : n; render(); return; }
   if (ds.setphase != null){ store.set('settings', Object.assign(settings(), { phase:+ds.setphase })); if (!$sheet.hidden) showSettings(); else { state.openPhase = +ds.setphase; } render(); return; }
