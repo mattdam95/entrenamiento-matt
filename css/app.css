@@ -390,3 +390,7 @@ mark{background:color-mix(in srgb,var(--warn) 40%,transparent);color:inherit;bor
 /* sin zoom: doble toque desactivado y campos de 16px (iOS hace zoom al enfocar campos más chicos) */
 html{touch-action:manipulation}
 input,textarea,select{font-size:16px!important}
+
+/* scroll sin barra visible (página, pantallas de detalle y tablas) */
+html,body,.sheet,.tbl{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar,.sheet::-webkit-scrollbar,.tbl::-webkit-scrollbar,*::-webkit-scrollbar{display:none;width:0;height:0}
