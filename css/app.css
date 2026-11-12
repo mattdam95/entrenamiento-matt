@@ -315,3 +315,7 @@ mark{background:color-mix(in srgb,var(--warn) 40%,transparent);color:inherit;bor
 .vbtn.del{color:var(--stop)}
 .stepper.sm button{width:30px;height:28px;font-size:17px}
 .stepper.sm output{min-width:62px;font-size:13px}
+
+.warmbtn{display:block;width:100%;text-align:left;transition:opacity .15s}
+.warmbtn:active{opacity:.55}
+.warmbtn b{color:var(--ink)}

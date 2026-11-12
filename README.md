@@ -11,7 +11,7 @@ index.html             página y estructura (pestañas, pantalla de detalle)
 css/app.css            estilos (tokens de color claro/oscuro arriba de todo)
 js/app.js              lógica: parseo de los planes, sesiones por fase y etapa, timer, registro, backup
 content/plan.md        el plan de antebrazo completo; fuente de verdad del contenido
-content/fuerza.md      el plan de fuerza del gimnasio (fichas G1–G20, etapas 1–4, sesiones)
+content/fuerza.md      el plan de fuerza del gimnasio (fichas G1–G27, etapas 1–4, sesiones)
 content/videos.json    videos de referencia (links de YouTube) por ficha, para validar desde la app
 manifest.webmanifest   para "Agregar a inicio" (pantalla completa)
 sw.js                  service worker: funciona sin conexión

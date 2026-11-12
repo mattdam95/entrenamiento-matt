@@ -91,7 +91,7 @@ const videos = ((await videosReq) || {}).videos || [];
 const vcode = f => { const t = String(f ?? '').trim().toUpperCase(); return /^\d+$/.test(t) ? 'F' + +t : t; };
 const videosDe = code => videos.filter(v => v.url && vcode(v.ficha) === code);
 
-/* gimnasio: fichas G (§4), etapas (§5) y entrada en calor (§6) de fuerza.md */
+/* gimnasio: fichas G (§4), etapas (§5) y sesiones (§6) de fuerza.md */
 let gym = null;
 try{
   const t = await fuerzaReq;
@@ -161,34 +161,35 @@ const SS = ' · superserie';
 const torsoA = e => ({ id:'torsoA', label:'Torso A', time:'≈55 min', items:[
   gx('G4','3×8–12 · 120 s'),
   e === 1 ? gx('G1','2×10–12 · 120 s') : gx('G1','3×8–12 · 120 s'),
-  gx('G6','2×8–12 · 90 s'),
+  gx('G21','2×12–15 por lado · 60 s'),
   e === 1 ? gx('G2','2×10–12 por lado · 90 s') : gx('G2','3×10–12 por lado · 90 s'),
-  gx('G7','3×12–20 · 60 s'),
-  gx('G10','2×10–15 · 60 s'+SS, { ss:'G11' }), gx('G11','2×10–15 · 60 s'+SS, { ss:'G10' })] });
+  gx('G25','3×12–20 por lado · 60 s'),
+  gx('G24','2×10–15 · 60 s'+SS, { ss:'G22' }), gx('G22','2×10–15 por lado · 60 s'+SS, { ss:'G24' })] });
 const torsoB = e => ({ id:'torsoB', label:'Torso B', time:'≈55 min', items:[
-  gx('G1', (e === 1 ? '2×10–12' : '3×10–12') + ' · 120 s · agarre supino'),
   gx('G5','3×8–15 · 120 s'),
-  e === 1 ? gx('G2','2×10–12 por lado · 90 s') : gx('G3','3×8–12 por lado · 90 s')]
-  .concat(e === 1 ? [] : [gx('G9','2×12–15 por lado · 60 s')])
-  .concat([gx('G7','3×12–20 · 60 s'), gx('G12','2×10–15 · 60 s'+SS, { ss:'G10' }), gx('G10','2×10–15 · 60 s'+SS, { ss:'G12' })]) });
+  e === 1 ? gx('G2','2×10–12 por lado · 90 s') : gx('G3','3×8–12 por lado · 90 s'),
+  gx('G1', (e === 1 ? '2×10–12' : '3×10–12') + ' · 120 s · agarre supino'),
+  gx('G9','2×12–15 por lado · 60 s'), gx('G25','3×12–20 por lado · 60 s'),
+  gx('G8','2×15–20 · 60 s'+SS, { ss:'G23' }), gx('G23','2×10–15 por lado · 60 s'+SS, { ss:'G8' })] });
 const piernasA = e => ({ id:'piernasA', label:'Piernas A', time:'≈50 min', items:[
   gx('G13','3×8–12 · 120 s'),
   e === 1 ? gx('G15','2×10–12 · 120 s · liviano') : gx('G15','3×8–12 · 120 s'),
-  gx('G14','2×8–12 por pierna · 90 s'), gx('G18','3×10–15 · 75 s'), gx('G19','3×10–15 por pierna · 60 s'),
-  gx('G20','Dead bug · 2×8–10 por lado · 60 s')] });
+  gx('G17','2×10–15 · 75 s'), gx('G18','3×10–15 · 75 s'), gx('G19','3×12–20 por pierna · 60 s'),
+  gx('G26','2×8–15 · 90 s')] });
 const piernasB = () => ({ id:'piernasB', label:'Piernas B', time:'≈50 min', items:[
   gx('G14','3×8–12 por pierna · 90 s'), gx('G16','3×10–15 · 120 s'), gx('G17','3×10–15 · 75 s'), gx('G18','2×10–15 · 75 s'),
-  gx('G19','3×10–15 por pierna · 60 s'), gx('G20','Plancha lateral · 2×20–40 s por lado · 45 s')] });
+  gx('G19','3×12–20 por pierna · 60 s'), gx('G27','2×8–15 · 90 s')] });
 /* los descansos de Torso C, Empuje y Tirón no están en §5: salen de la dosis de cada ficha */
 const torsoC = () => ({ id:'torsoC', label:'Torso C', time:'', items:[
-  gx('G7','3×12–20 · 60 s'), gx('G5','3×8–15 · 120 s'), gx('G9','2×12–15 por lado · 60 s'), gx('G8','2×15–20 · 60 s'),
-  gx('G10','3×10–15 · 60 s'+SS, { ss:'G11' }), gx('G11','3×10–15 por lado · 60 s'+SS, { ss:'G10' }), gx('G12','2×10–15 · 60 s')] });
+  gx('G25','3×12–20 por lado · 60 s'), gx('G6','3×8–12 · 90 s'), gx('G21','2×12–15 por lado · 60 s'), gx('G9','2×12–15 por lado · 60 s'),
+  gx('G8','2×15–20 · 60 s'), gx('G24','3×10–15 · 60 s'+SS, { ss:'G23' }), gx('G23','3×10–15 por lado · 60 s'+SS, { ss:'G24' }),
+  gx('G11','2×10–15 por lado · 60 s')] });
 const empuje = () => ({ id:'empuje', label:'Empuje', time:'', items:[
-  gx('G4','3×8–12 · 120 s'), gx('G5','3×8–15 · 120 s'), gx('G6','3×8–12 · 90 s'), gx('G9','2×12–15 por lado · 60 s'),
-  gx('G7','3×12–20 · 60 s'), gx('G11','3×10–15 por lado · 60 s')] });
+  gx('G4','3×8–12 · 120 s'), gx('G5','3×8–15 · 120 s'), gx('G6','3×8–12 · 90 s'), gx('G21','2×12–15 por lado · 60 s'),
+  gx('G25','3×12–20 por lado · 60 s'), gx('G24','3×10–15 · 60 s')] });
 const tiron = () => ({ id:'tiron', label:'Tirón', time:'', items:[
   gx('G1','3×8–12 · 120 s'), gx('G3','3×8–12 por lado · 90 s'), gx('G2','2×10–12 por lado · 90 s'), gx('G8','2×15–20 · 60 s'),
-  gx('G10','3×10–15 · 60 s'), { f:10, dose:'Carry 3×30–40 m o colgarse 3×15–30 s', sets:3, reps:null, rest:60 }],
+  gx('G22','3×10–15 por lado · 60 s'), gx('G23','2×10–15 por lado · 60 s'), { f:10, dose:'Carry 3×30–40 m o colgarse 3×15–30 s', sets:3, reps:null, rest:60 }],
   info:'Straps: en Fase 4 podés soltarlos en la primera serie de cada tirón y mantenerlos en las siguientes.' });
 const off = (label, info) => ({ id:null, label, time:'', items:[], info: info || '' });
 const RIR1 = 'Etapa 1: 3 repeticiones en reserva en todo. Straps en todos los tirones.';
@@ -209,7 +210,8 @@ const itemCode = it => it.g || 'F' + it.f;
 /* equipo por ficha (§2 y §4): maq = máquina o polea (placas), mancu = mancuernas, kb = kettlebell,
    bw = peso corporal (solo reps), lastre = peso corporal con kettlebell opcional (G14) */
 const EQUIPO = { G1:'maq', G2:'maq', G3:'kb', G4:'mancu', G5:'bw', G6:'mancu', G7:'mancu', G8:'maq', G9:'maq', G10:'mancu',
-  G11:'maq', G12:'mancu', G13:'kb', G14:'lastre', G15:'kb', G16:'kb', G17:'maq', G18:'maq', G19:'bw', G20:'bw' };
+  G11:'maq', G12:'mancu', G13:'kb', G14:'lastre', G15:'kb', G16:'kb', G17:'maq', G18:'maq', G19:'bw', G20:'bw',
+  G21:'maq', G22:'maq', G23:'mancu', G24:'maq', G25:'maq', G26:'bw', G27:'maq' };
 const MANCU = [1,2,3,4,5,6,8,10], KB = [6,14,18];
 /* pasos del stepper de peso: el salto real de cada equipo */
 const PASOS = { mancu:[1,2,3,4,5,6,8,10,12,14,16,18,20], kb:[4,6,8,10,12,14,16,18,20,22,24,28,32], lastre:[0,4,6,8,10,12,14,16,18,20,24], bw:[0,2,4,6,8,10,12,14,16,18,20] };
@@ -276,7 +278,7 @@ function semanas(regs, hasta, n){
   const h = parseIso(hasta);
   return [...Array(n)].map((_, i) => { const fin = addDays(h, -7 * (n - 1 - i)); return promedio(regs, iso(addDays(fin, -6)), iso(fin)); });
 }
-/* tendencia (§3): +1 a 1,5 kg por mes; si en 3 semanas no se movió, sumar un snack; si sube más de 2 kg en un mes, sacarlo */
+/* tendencia (§9): +1 a 1,5 kg por mes; si en 3 semanas no se movió, sumar un batido o snack; si sube más de 2 kg en un mes, sacarlo */
 function tendencia(regs, hasta){
   const h = parseIso(hasta), a7 = promedio(regs, iso(addDays(h, -6)), hasta);
   const a3 = promedio(regs, iso(addDays(h, -27)), iso(addDays(h, -21))), a4 = promedio(regs, iso(addDays(h, -34)), iso(addDays(h, -28)));
@@ -428,7 +430,7 @@ function renderHoy(){
           <div><div class="eyebrow">Gimnasio · ${gs.label}</div><div style="font-size:20px;font-weight:700;margin-top:3px">${gs.time || gs.items.length + ' ejercicios'}</div><div class="muted" style="font-size:13px;margin-top:2px">Etapa ${s.etapa}</div></div>
           ${ring(gdone, gs.items.length)}
         </div>
-        <div class="info warm">${inline(gym.warm)}</div>
+        <button class="info warm warmbtn" data-section="g7"><b>Entrada en calor</b> · ${warmDe(gs)}<span class="more" aria-hidden="true"> ›</span></button>
         ${gs.freno ? `<div class="freno"><b>Freno de agarre hasta el ${diaCorto(iso(addDays(parseIso(gs.freno.m), 6)))}.</b> Después del gimnasio del ${diaCorto(gs.freno.date)} amaneciste en ${gs.freno.v}/10${gs.freno.b != null ? ` (tu base: ${gs.freno.b})` : ''}. En los 🟡: 2 series y sin subir peso (§1).</div>` : ''}
         ${retroceso(state.date) ? `<div class="freno bad"><b>Dos semanas seguidas amaneciendo peor.</b> ${s.etapa > 1 ? `El plan dice volver a la Etapa ${s.etapa - 1} (§5). <button class="btn ghost" style="margin-top:8px" data-setetapa="${s.etapa - 1}">Volver a la Etapa ${s.etapa - 1}</button>` : 'Ya estás en la Etapa 1: bajá series en los 🟡 y consultá con tu kinesiólogo.'}</div>` : ''}
         <div>${rows}</div>
@@ -475,7 +477,11 @@ function renderHoy(){
     <p class="disclaimer">Orientativo: no reemplaza a tu traumatólogo o kinesiólogo. Los registros se guardan sólo en este dispositivo. ${backupAge()} <button data-settings style="color:var(--accent);font-size:inherit">Hacer backup</button></p>`;
 }
 
-/* peso corporal (§3 y §7 de fuerza.md): bw en el log del día, promedio de 7 días y promedios semanales */
+/* entrada en calor (§7 de fuerza.md), resumida según el tipo de día; tocarla abre la sección completa */
+const warmDe = ses => /^piernas/.test(ses.id || '')
+  ? '6–10 min de bici, movilidad dinámica de piernas y 1–2 series de aproximación del primero con la mitad del peso.'
+  : '5–10 min de cinta o bici si llegás frío, movilidad de hombros, escápulas y manguito con banda, y 1–2 series de aproximación del primero.';
+/* peso corporal (§9 y §10 de fuerza.md): bw en el log del día, promedio de 7 días y promedios semanales */
 function bwCard(L){
   const regs = allLogs().filter(x => typeof x.L.bw === 'number').map(x => ({ date:x.date, bw:x.L.bw }));
   const t = tendencia(regs, state.date), wk = semanas(regs, state.date, 8), vals = wk.filter(v => v != null);
@@ -483,7 +489,7 @@ function bwCard(L){
   const bars = wk.map((v, i) => `<div class="${v == null ? '' : i === 7 ? 'a' : 'b'}" style="height:${v == null ? 3 : Math.round(12 + 88 * (v - lo) / (hi - lo))}%" title="${v == null ? '—' : num(v, 1) + ' kg'}"></div>`).join('');
   const sg = d => (d >= 0 ? '+' : '−') + num(Math.abs(d), 1) + ' kg';
   const tip = t.rapido ? `Subió ${sg(t.d4)} en un mes, más de 2 kg: sacá el snack que sumaste.`
-    : t.quieto ? `En 3 semanas el promedio no se movió (${sg(t.d3)}): sumá un snack (yogur con avena, pan con queso y huevo, banana con maní).` : '';
+    : t.quieto ? `En 3 semanas el promedio no se movió (${sg(t.d3)}): sumá un batido (leche, banana, avena y pasta de maní) o un snack (§9).` : '';
   return `<section class="glass pad">
       <div class="row between"><div><div class="eyebrow">Peso corporal</div>
         <div class="note" style="margin-top:3px">${t.a7 != null ? `Promedio 7 días: <b class="mono">${num(t.a7, 1)} kg</b>` : 'Sin registros esta semana'}</div></div>
@@ -526,6 +532,9 @@ function renderPrograma(){
       ${segCtl('programa', 'Antebrazo')}
       ${stageCards(gym.etapas, s.etapa, state.openEtapa, 'etapa', 'etapa', crit)}
       ${linkCard('g6', 'Gimnasio · §6', 'Sesiones')}
+      ${linkCard('g7', 'Gimnasio · §7', 'Entrada en calor')}
+      ${linkCard('g8', 'Gimnasio · §8', 'Recuperación y sueño')}
+      ${linkCard('g9', 'Gimnasio · §9', 'Comer para ganar masa')}
       ${linkCard('g3', 'Gimnasio · §3', 'Cómo progresar')}
       ${linkCard('g1', 'Gimnasio · §1', 'Cómo encaja con la rehab')}
       <p class="disclaimer">${inline(gym.etapaIntro)}</p>`;
@@ -571,7 +580,7 @@ function renderFichas(){
   if (state.seg.fichas === 'gym'){
     const groups = [...new Set(gym.fichas.map(f => f.group))];
     $view.innerHTML = `
-      ${head('Veinte ejercicios · gimnasio', 'Fichas')}
+      ${head(gym.fichas.length + ' ejercicios · gimnasio', 'Fichas')}
       ${segCtl('fichas', 'Recuperación')}
       ${groups.map(g => `<div class="eyebrow group-eb">${esc(g || 'Ejercicios')}</div>
       <section class="glass list">${gym.fichas.filter(f => f.group === g).map(f => li(f, f.tags.concat(nvids(f.code)).join(' · '))).join('')}</section>`).join('')}

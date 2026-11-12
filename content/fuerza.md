@@ -68,22 +68,15 @@ Cada ejercicio tiene un rango de repeticiones (por ejemplo `3×8–12`). Empezá
 
 ### Descarga
 
-Cada 6–8 semanas, o antes si dos sesiones seguidas no podés repetir lo de la semana anterior: **una semana con la mitad de las series y los mismos pesos.** Si coincide con un pico de horas de mano (release, maratón de piano), aprovechá esa semana para descargar.
+Cada 2–3 meses, o antes si dos sesiones seguidas no podés repetir lo de la semana anterior, hacé **una semana de descarga: bajá el peso un 15–40 % en todos los ejercicios y hacé las mismas repeticiones de siempre, sin acercarte al fallo** (si con 10 kg hacés 10, esa semana 10 con 6–8 kg). Bluegym la recomienda cada 3–4 meses; acá va antes porque el tendón se adapta más lento que el músculo. Si coincide con un pico de horas de mano (release, maratón de piano), aprovechá esa semana para descargar.
 
-### Comer para crecer
-
-Con 60 kg y 170 cm, el limitante es más la comida que el entrenamiento. Sin superávit calórico se gana fuerza pero muy poco músculo.
-
-- **Proteína:** 1,6–2,2 g/kg/día → **100–130 g/día**, en 4 comidas de 25–35 g (las ideas de §16 del plan de antebrazos sirven tal cual, con porciones algo más grandes).
-- **Superávit chico:** comé ~300 kcal más de lo que mantiene tu peso. Pesate 3 mañanas por semana y mirá el promedio: el objetivo es **+1 a 1,5 kg por mes**. Si en 3 semanas no se mueve, sumá un snack (yogur con avena, pan con queso y huevo, banana con maní). Si sube más de 2 kg por mes, sacalo.
-- **Creatina monohidrato:** 3–5 g por día, todos los días, a cualquier hora. Es el suplemento con mejor evidencia para fuerza y masa muscular, y es seguro en personas sanas. Opcional.
-- **Sueño:** 7–9 h. Con menos se recupera peor el músculo y el tendón.
+La comida y el sueño, que pesan tanto como el entrenamiento, están en §8 y §9.
 
 ## 4 · Fichas de ejercicios
 
 Veintisiete ejercicios en dos grupos: torso (G1–G12 y G21–G25) y piernas y core (G13–G20, G26 y G27). Mismo formato que las fichas del plan de antebrazos.
 
-**Cómo están elegidos:** según lo que recomienda Bluegym Animation (§8) para cada músculo, adaptado a lo que hay en el gimnasio y al semáforo de antebrazo. Donde él prefiere la polea a la mancuerna (laterales, curl, tríceps sobre la cabeza), la versión con polea es la principal y la de mancuerna queda como alternativa: así no se pierde el historial de cargas que ya tengas.
+**Cómo están elegidos:** según lo que recomienda Bluegym Animation (§11) para cada músculo, adaptado a lo que hay en el gimnasio y al semáforo de antebrazo. Donde él prefiere la polea a la mancuerna (laterales, curl, tríceps sobre la cabeza), la versión con polea es la principal y la de mancuerna queda como alternativa: así no se pierde el historial de cargas que ya tengas.
 
 **Semáforo de agarre:** 🟢 sin agarre o agarre liviano, entra desde ya · 🟡 agarre medio/alto, con straps y dentro del presupuesto de antebrazo (§14 del plan).
 
@@ -368,9 +361,9 @@ Veintisiete ejercicios en dos grupos: torso (G1–G12 y G21–G25) y piernas y c
 
 *Leg extension* · 🟢 · ETAPA 1–4
 
-- **Trabaja** — Cuádriceps, sobre todo el recto femoral (que la sentadilla trabaja poco).
-- **Ejecución** — Respaldo ajustado para que la rodilla quede alineada con el eje de la máquina, rodillo sobre el tobillo. Estirá hasta arriba, pausa de 1 s, bajá en 2–3 s. Las manos apoyadas en las manijas sin apretar.
-- **Dosis** — `2–3×10–15 · 75 s`.
+- **Trabaja** — Cuádriceps, sobre todo el recto femoral: cruza la cadera y la rodilla, así que en la sentadilla se estira por un lado y se acorta por el otro y recibe poco estímulo. Por eso Bluegym pide dos ejercicios de cuádriceps: uno de sentadilla y éste. Va en los dos días de piernas.
+- **Ejecución** — Respaldo lo más reclinado que permita la máquina (con la cadera menos flexionada el recto femoral trabaja más), rodilla alineada con el eje, rodillo sobre el tobillo. Estirá hasta arriba, pausa de 1 s, bajá en 2–3 s con todo el recorrido. Las manos apoyadas en las manijas, sin apretar.
+- **Dosis** — `2–3×10–15 · 75 s`. Si te molestan las rodillas, quedate en 12–15 con menos peso.
 - **Progresión** — Reps, después placa.
 - **Errores** — Patear con impulso; levantar la cola del asiento.
 
@@ -390,19 +383,46 @@ Veintisiete ejercicios en dos grupos: torso (G1–G12 y G21–G25) y piernas y c
 
 - **Trabaja** — Gemelos y sóleo.
 - **Ejecución** — Punta de un pie sobre el primer barrote de la espaldera (o un escalón), talón en el aire. Una mano apoyada abierta en un barrote más arriba, sólo para equilibrio. Bajá el talón hasta el máximo estiramiento, pausa de 1 s, subí hasta arriba.
-- **Dosis** — `3×10–15 por pierna · 60 s`.
+- **Dosis** — `3×12–20 por pierna · 60 s`. Los gemelos responden bien a series largas: apuntá más cerca de 20 que de 12, siempre cerca del fallo y con la rodilla trabada.
 - **Progresión** — Reps → pausa de 2 s abajo → kettlebell en la otra mano (🟡, desde Fase 3).
 - **Errores** — Rebotar abajo; recorrido corto.
 
 #### G20 · Core: dead bug y plancha lateral
 
-*Dead bug · side plank* · 🟢 · ETAPA 1–4
+*Dead bug · side plank* · 🟢 · ETAPA 1–4 · alternativa a G26 y G27
 
 - **Trabaja** — Abdominales profundos, oblicuos. Sin agarre y sin carga de muñeca.
 - **Ejecución** — **Dead bug:** boca arriba, brazos al techo, cadera y rodillas a 90°. Pegá la zona lumbar al piso y estirá un brazo y la pierna contraria sin que la espalda se despegue; volvé y cambiá. **Plancha lateral:** apoyado en el antebrazo (no en la mano), cuerpo en línea, cadera arriba.
 - **Dosis** — Dead bug `2×8–10 por lado · 60 s`. Plancha lateral `2×20–40 s por lado · 45 s`.
 - **Progresión** — Dead bug con banda o kettlebell de 6 kg en los brazos; plancha lateral con la pierna de arriba elevada.
 - **Errores** — Despegar la lumbar; dejar caer la cadera.
+
+#### G26 · Elevación de piernas en el banco
+
+*Lying leg raise (dragon flag progression)* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Recto abdominal y core completo: generás fuerza al subir y resistís al bajar. Es la base de la progresión hacia la dragon flag, el ejercicio de core que Bluegym considera más completo.
+- **Ejecución** — Acostado en el banco, las manos tomando el borde por detrás de la cabeza, sin apretar fuerte. Metete la pelvis hacia adentro (lumbar pegada al banco) y llevá las rodillas al pecho hasta que la cadera se despegue un poco, como un crunch al revés. Bajá lento sin que la lumbar se arquee.
+- **Dosis** — `2–3×8–15 · 90 s`.
+- **Progresión** — Rodillas flexionadas → subir con las rodillas flexionadas y bajar con las piernas más estiradas → piernas estiradas → bajada de 3–5 s. La versión colgado de la espaldera es 🟡 y cuenta como colgarse (ficha 10 del plan): desde Fase 3.
+- **Errores** —
+- Arquear la zona lumbar.
+- Mover sólo las piernas sin enrollar la pelvis: así trabaja el flexor de cadera, no el abdomen.
+- Bajar de golpe.
+- **Si molesta el antebrazo** — Manos al costado del cuerpo, apoyadas en el banco, en lugar de agarrar el borde.
+
+#### G27 · Crunch en polea alta
+
+*Kneeling cable crunch* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Recto abdominal con carga progresiva. Para que los abdominales crezcan hace falta flexión de columna con peso, igual que un curl para el bíceps; Bluegym lo pone como el ejercicio estrella.
+- **Ejecución** — Polea alta, soga. Arrodillado frente a la torre, la soga a los costados de la cabeza y las manos quietas. Enrollá la columna llevando las costillas hacia la pelvis (los codos van hacia los muslos) y volvé lento. La cadera no se mueve: es la columna la que se curva.
+- **Dosis** — `2–3×8–15 · 90 s`.
+- **Progresión** — Reps, después placa.
+- **Errores** —
+- Tirar con los brazos.
+- Sentarse sobre los talones: eso es una bisagra de cadera, no un crunch.
+- **Si molesta el antebrazo** — Pasá un strap o una toalla por la manija y sostenelo contra el pecho, sin agarrar.
 
 ## 5 · Etapas, atadas a las fases del antebrazo
 
@@ -416,7 +436,7 @@ rehab Fase 2 · 4 días · ahora, hasta pasar a Fase 3
 
 - **Para qué:** aprender los ejercicios, encontrar los pesos y ver cómo responde el antebrazo a la carga extra. 3 repeticiones en reserva en todo.
 - **Semana:** Lun torso A · Mar piernas A · Mié antebrazo pesado en casa · Jue piernas B · Vie torso B. Sáb aeróbico o descanso · Dom descanso.
-- **Torso:** sin G3 ni G9; los tirones (G1, G2) a 2 series. Los días de torso son los días pesados de antebrazo de la Fase 2 (lunes y viernes).
+- **Torso:** las mismas sesiones que en la Etapa 2, pero los tirones (G1, G2) a 2 series y G2 en lugar de G3. Los días de torso son los días pesados de antebrazo de la Fase 2 (lunes y viernes).
 - **Piernas:** completo; el rumano (G15) a 2 series y liviano.
 
 **Pasás a Etapa 2 cuando**
@@ -432,7 +452,7 @@ rehab Fase 3 · 4 días · torso/piernas
 
 - **Para qué:** el bloque principal. Volumen completo, 1–2 en reserva.
 - **Semana:** Lun torso A + antebrazo pesado · Mar piernas A · Mié descanso · Jue torso B + antebrazo pesado · Vie piernas B · Sáb endurance de antebrazo (casa, 15 min) + aeróbico opcional · Dom descanso. Coincide con los días que la app ya usa para la Fase 3.
-- **Volumen semanal aproximado:** espalda 12 series, pecho 8, hombro lateral 6, bíceps y tríceps 4–6 directas (más lo que trabajan en los tirones y empujes), cuádriceps 8–9, isquios y glúteos 8–9, gemelos 6.
+- **Volumen semanal aproximado:** espalda 12 series (+2 de face pull), pecho 10, hombro lateral 6, bíceps 4 directas, tríceps 2 directas (más todo lo que trabajan en los press, que es mucho), cuádriceps 11, isquios 8, glúteos 3 directas más lo que trabajan en sentadillas y rumano, gemelos 6, abdominales 4–6.
 
 **Pasás a Etapa 3 (5 días) cuando**
 
@@ -448,7 +468,7 @@ rehab Fase 3 · 4 días · torso/piernas
 rehab Fase 3–4 · 5 días · torso/piernas + brazos y hombros
 
 - **Semana:** igual que Etapa 2, más **Sáb torso C** (hombros y brazos, todo 🟢). La endurance de antebrazo pasa al miércoles.
-- **Torso C:** G7 `3×12–20` · G5 `3×8–15` · G9 `2×12–15` · G8 `2×15–20` · superserie G10 + G11 `3×10–15` · G12 `2×10–15`.
+- **Torso C:** G25 `3×12–20` · G6 `3×8–12` · G21 `2×12–15` · G9 `2×12–15` · G8 `2×15–20` · superserie G24 + G23 `3×10–15` · G11 `2×10–15`.
 
 **Pasás a Etapa 4 (6 días) cuando**
 
@@ -466,14 +486,14 @@ rehab Fase 3–4 · 5 días · torso/piernas + brazos y hombros
 rehab Fase 4 · empuje / tirón / piernas ×2
 
 - **Semana:** Lun empuje · Mar tirón + mantenimiento de antebrazo · Mié piernas · Jue empuje · Vie tirón + mantenimiento de antebrazo · Sáb piernas · Dom descanso. Los tirones siguen concentrados en 2 días con ≥72 h entre sí.
-- **Empuje:** G4 `3×8–12` · G5 `3×8–15` · G6 `3×8–12` · G9 `2×12–15` · G7 `3×12–20` · G11 `3×10–15`.
-- **Tirón:** G1 `3×8–12` · G3 `3×8–12` · G2 `2×10–12` · G8 `2×15–20` · G10 `3×10–15` · ficha 10 del plan (carry o colgarse).
+- **Empuje:** G4 `3×8–12` · G5 `3×8–15` · G6 `3×8–12` · G21 `2×12–15` · G25 `3×12–20` · G24 `3×10–15`.
+- **Tirón:** G1 `3×8–12` · G3 `3×8–12` · G2 `2×10–12` · G8 `2×15–20` · G22 `3×10–15` · G23 `2×10–15` · ficha 10 del plan (carry o colgarse). Si en Fase 4 el codo está bien, podés sumar curl martillo `2×10–15`.
 - **Piernas:** las sesiones A y B alternadas.
 - **Straps:** en Fase 4 podés empezar a soltarlos en la primera serie de cada tirón, manteniéndolos en las siguientes.
 
 ## 6 · Sesiones
 
-Cada sesión empieza con **5 min de bici o cinta** y **1–2 series de aproximación** livianas del primer ejercicio. Los días que hay bloque de antebrazo, va antes de todo esto.
+Cada sesión empieza con la entrada en calor de §7: **5–10 min de bici o cinta**, movilidad dinámica de lo que vas a entrenar y **1–2 series de aproximación** livianas del primer ejercicio. Los días que hay bloque de antebrazo, va antes de todo esto.
 
 Superserie = hacés una serie de cada ejercicio seguidas y después descansás.
 
@@ -483,21 +503,21 @@ lunes · ≈55 min
 
 - G4 Press de pecho con mancuernas `3×8–12 · 120 s`
 - G1 Jalón al pecho `3×8–12 · 120 s`
-- G6 Press de hombros sentado `2×8–12 · 90 s`
+- G21 Cruce en polea de abajo hacia arriba `2×12–15 por lado · 60 s`
 - G2 Remo a una mano en polea baja `3×10–12 por lado · 90 s`
-- G7 Elevaciones laterales `3×12–20 · 60 s`
-- Superserie G10 Curl + G11 Tríceps en polea `2×10–15 · 60 s`
+- G25 Elevación lateral en polea `3×12–20 por lado · 60 s`
+- Superserie G24 Tríceps sobre la cabeza en polea + G22 Curl bayesiano `2×10–15 · 60 s` (los dos con la polea baja, de espaldas a la torre)
 
 ### Torso B
 
 jueves (Etapa 1: viernes) · ≈55 min
 
-- G1 Jalón al pecho, agarre supino `3×10–12 · 120 s`
 - G5 Flexiones con pies elevados `3×8–15 · 120 s`
 - G3 Remo con kettlebell `3×8–12 por lado · 90 s` (Etapa 1: G2)
-- G9 Apertura en polea `2×12–15 por lado · 60 s` (Etapa 1: no)
-- G7 Elevaciones laterales `3×12–20 · 60 s`
-- Superserie G12 Tríceps sobre la cabeza + G10 Curl `2×10–15 · 60 s`
+- G1 Jalón al pecho, agarre supino `3×10–12 · 120 s`
+- G9 Apertura en polea `2×12–15 por lado · 60 s`
+- G25 Elevación lateral en polea `3×12–20 por lado · 60 s`
+- Superserie G8 Face pull + G23 Curl concentrado `2×12–20 · 60 s`
 
 ### Piernas A
 
@@ -505,10 +525,10 @@ martes · ≈50 min
 
 - G13 Sentadilla goblet `3×8–12 · 120 s`
 - G15 Peso muerto rumano `3×8–12 · 120 s`
-- G14 Sentadilla búlgara `2×8–12 por pierna · 90 s`
+- G17 Extensión de cuádriceps `2×10–15 · 75 s`
 - G18 Curl femoral `3×10–15 · 75 s`
-- G19 Gemelos `3×10–15 por pierna · 60 s`
-- G20 Dead bug `2×8–10 por lado · 60 s`
+- G19 Gemelos `3×12–20 por pierna · 60 s`
+- G26 Elevación de piernas en el banco `2×8–15 · 90 s`
 
 ### Piernas B
 
@@ -518,16 +538,107 @@ viernes (Etapa 1: jueves) · ≈50 min
 - G16 Hip thrust `3×10–15 · 120 s`
 - G17 Extensión de cuádriceps `3×10–15 · 75 s`
 - G18 Curl femoral `2×10–15 · 75 s`
-- G19 Gemelos `3×10–15 por pierna · 60 s`
-- G20 Plancha lateral `2×20–40 s por lado · 45 s`
+- G19 Gemelos `3×12–20 por pierna · 60 s`
+- G27 Crunch en polea alta `2×8–15 · 90 s`
 
-## 7 · Qué registrar
+## 7 · Entrada en calor
+
+Unos 10 minutos, siguiendo a Bluegym: subir la temperatura y mover **de forma dinámica** lo que vas a entrenar. Nada de estiramientos estáticos (sostener 30–40 s) antes de entrenar: sirven para trabajar flexibilidad, no para preparar una sesión de fuerza. Movimientos controlados, a velocidad media, sin rebotes.
+
+### 1 · Subir la temperatura
+
+- **Días de piernas:** 6–10 min de bici, siempre.
+- **Días de torso:** 5–10 min de cinta o bici si llegás frío. Si fuiste caminando y ya estás en movimiento, alcanza con la movilidad.
+
+### 2 · Movilidad de torso
+
+- **Hombros:** balanceos de brazos adelante-atrás y círculos en los dos sentidos, 10–15 de cada uno. Más controlado con un palo o la banda.
+- **Escápulas:** de pie frente a la pared, con los antebrazos apoyados, separá y juntá los omóplatos sin doblar los codos, 10–15 veces. Bluegym las hace en cuatro patas o en posición de flexión; en tu caso, mejor contra la pared o sobre los antebrazos, para no cargar la muñeca en extensión.
+- **Dorsales y columna:** inclinaciones laterales con el brazo arriba, 10 por lado; postura del niño y esfinge (la cobra apoyado en los antebrazos) alternadas, 10–15 veces.
+- **Manguito rotador:** rotaciones externas con banda, codo pegado al cuerpo y fijo, 15 por lado. Los días que hacés la ficha 11 del plan de antebrazos ya está cubierto.
+- **Cuello:** giros lentos a los lados, arriba-abajo e inclinaciones laterales, 5–8 de cada uno, sin apurarte.
+
+### 3 · Movilidad de piernas
+
+- Balanceos de pierna adelante-atrás y laterales, 10–15 por pierna.
+- Isquios y cuádriceps dinámicos: bajar hacia los pies con las piernas casi estiradas y volver, alternando con sentadillas sin peso, 1 s en cada posición, 10 veces.
+- Sentadilla lateral, pecho alto y la otra pierna estirada, 8–10 por lado.
+
+### 4 · Series de aproximación
+
+1–2 series del primer ejercicio con la mitad del peso. Sirven para calentar y para repasar la técnica antes de las series de verdad.
+
+**Muñecas:** el bloque de antebrazo que va antes ya las calienta. Los días sin bloque, 10–15 círculos lentos en cada sentido, sin forzar el final del recorrido.
+
+## 8 · Recuperación y sueño
+
+"El músculo se construye cuando descansás, no cuando vas al gimnasio": entrenar genera el estímulo, y crecés mientras te recuperás de él. Para Bluegym, comer y dormir pesan tanto como entrenar.
+
+### Dormir
+
+- **7–8 h**, todas las noches.
+- **Horarios fijos:** acostarte y levantarte más o menos a la misma hora, también el fin de semana. Correrlo una hora no pasa nada; trasnochar una o dos veces por mes, tampoco. Trasnochar todos los fines de semana se nota en el progreso.
+- **Pantallas afuera** 30–60 min antes de dormir. Si no podés, por lo menos soltá el celular.
+
+### Cómo saber si te estás recuperando bien
+
+- **Rendimiento:** subís peso o repeticiones, o la técnica sale más limpia. Es la señal principal.
+- **Energía:** llegás con ganas a entrenar y mantenés tu nivel. No vas a subir algo todas las semanas, y es normal; evaluá el progreso a 1–2 meses, no de una sesión a la otra.
+- **Agujetas:** que te duelan los músculos 1–2 días después es normal, sobre todo al principio. Que no puedas moverte, no.
+- **Señales de que no alcanza:** el rendimiento baja dos sesiones seguidas, no tenés energía, o el antebrazo amanece peor (§1). Primero revisá sueño y comida; después hacé la descarga de §3.
+
+### Cómo está armada la semana para recuperar
+
+- Cada músculo se entrena **2 veces por semana con ~48 h entre medio**: Bluegym dice que con frecuencia 1 se crece mucho más lento.
+- Los días de torso, que son los más pesados, van **separados por días de piernas o de descanso**, nunca seguidos. Lo mismo hace con el día de brazos y hombros de la Etapa 3.
+- **No todo va al fallo:** dejar 1–3 repeticiones en reserva (§3) es lo que te permite recuperarte para la siguiente sesión. El fallo, sólo en la última serie de los ejercicios chicos.
+- **El aeróbico no te hace perder músculo** si comés bien y seguís levantando pesas. Caminar y la bici de los días livianos suman, no restan.
+
+## 9 · Comer para ganar masa
+
+Con 60 kg y 170 cm, el limitante es más la comida que el entrenamiento: sin superávit calórico se gana fuerza pero muy poco músculo. Lo que sigue combina lo que recomienda Bluegym con tus restricciones del plan de antebrazos (§16: sin cebolla, sin pescado, sin brócoli).
+
+### Cuánto
+
+- **Calorías:** comé un **10 % más** de lo que mantiene tu peso, unas **250–300 kcal extra**. Bluegym dice que es mejor pasarse un poco que quedarse corto: si te quedás corto, no crecés. Para alguien flaco que entrena 4–6 días, el gasto es alto.
+- **Control:** pesate 3 mañanas por semana y mirá el promedio. El objetivo es **+1 a 1,5 kg por mes**. Si en 3 semanas no se mueve, sumá un batido o un snack. Si sube más de 2 kg por mes, sacá algo.
+- **Proteína:** **1,6–2 g/kg/día → 100–120 g/día**, repartida en 4 comidas de 25–35 g.
+- **No le escapes a las grasas ni a los hidratos.** Las grasas son las que hacen que el volumen sea más fácil de comer, y los hidratos son el combustible del entrenamiento intenso.
+
+### Qué comer
+
+Los alimentos que Bluegym pone en lo más alto, adaptados a lo que se consigue acá y sin pescado:
+
+- **Huevos:** todos los días, enteros (la yema es parte de lo bueno).
+- **Pollo**, en cualquier forma: al horno, desmenuzado, en hamburguesas, en guiso. No hace falta que sea pechuga a la plancha.
+- **Carne picada** (vaca o vaca y cerdo): más calorías, útil cuando cuesta llegar.
+- **Legumbres:** lentejas, garbanzos y porotos. Baratas, con proteína y fibra.
+- **Lácteos:** queso blanco, ricota, queso cottage y yogur natural. Suman proteína a cualquier comida.
+- **Avena:** el desayuno ideal, porque da energía sin el bajón de los cereales azucarados.
+- **Maní y pasta de maní:** muchas calorías y grasas buenas en poco volumen. Bluegym dice que "salva el volumen".
+- **Proteína whey:** un scoop tiene ~25 g de proteína y sale más barato que conseguirla con huevos. Opcional; tiene sentido si no llegás a la proteína con comida.
+
+**Arroz con pollo, pero rico:** no hace falta comer soso. Arroz con pollo y verduras, guisos, pollo al horno con papas: con especias y salsas simples (sin cebolla: puerro, ajo, morrón, pimentón) tenés platos con buenas cantidades que no aburren.
+
+**Lo que conviene limitar:** que la base de una comida sean harinas refinadas (galletitas, cereales azucarados, facturas). Un poco no pasa nada; el problema es cuando son el desayuno o la merienda enteros. Regla simple: cuanto menos ingredientes tenga en la etiqueta, mejor.
+
+### Trucos para que entre la comida
+
+- **Batido hipercalórico:** leche + banana + avena + pasta de maní (+ un scoop de whey si tenés). Es el truco principal de Bluegym para los flacos a los que les cuesta comer. Si no llegás, 1 por día; si igual no alcanza, 2 (a la mañana y a la tarde).
+- **5–6 platos fijos:** elegí 5 o 6 comidas que te gusten y aprendete más o menos qué cantidades llevan. Repetirlas hace que el volumen sea fácil de sostener. Si querés contar al principio, una app de calorías ayuda las primeras semanas.
+
+### Suplementos
+
+- **Creatina monohidrato:** 3–5 g por día, todos los días, a cualquier hora. Es el suplemento con mejor evidencia para fuerza y masa muscular, y es segura en personas sanas. Opcional.
+- **Whey:** ver arriba.
+
+## 10 · Qué registrar
 
 Por ejercicio y por serie: **peso** (kg o placas) y **repeticiones**. Por sesión: **molestia máxima de antebrazo** (0–10) durante, y a la mañana siguiente si estás en línea de base. Una vez por semana: **peso corporal** (promedio de 3 mañanas).
 
 Con eso alcanza para aplicar la doble progresión, ver si el antebrazo tolera la carga y saber si estás comiendo lo suficiente.
 
-## 8 · Fuentes
+## 11 · Fuentes
 
 1. [Schoenfeld, Ogborn & Krieger 2017. Dose-response relationship between weekly resistance training volume and increases in muscle mass. J Sports Sci](https://doi.org/10.1080/02640414.2016.1210197) · metaanálisis · volumen semanal
 2. [Schoenfeld, Ogborn & Krieger 2016. Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med](https://doi.org/10.1007/s40279-016-0543-8) · metaanálisis · cada músculo 2 veces por semana
@@ -536,3 +647,4 @@ Con eso alcanza para aplicar la doble progresión, ver si el antebrazo tolera la
 5. [Schoenfeld et al. 2016. Longer interset rest periods enhance muscle strength and hypertrophy in resistance-trained men. J Strength Cond Res](https://doi.org/10.1519/JSC.0000000000001272) · ensayo · descansos
 6. [Morton et al. 2018. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains. Br J Sports Med](https://doi.org/10.1136/bjsports-2017-097608) · metaanálisis · ~1,6 g/kg/día
 7. [Kreider et al. 2017. ISSN position stand: safety and efficacy of creatine supplementation. J Int Soc Sports Nutr](https://doi.org/10.1186/s12970-017-0173-z) · posición · creatina
+8. [Bluegym Animation](https://www.youtube.com/@Bluegymanimation) · canal de YouTube · selección de ejercicios por músculo, sobre todo: [Los 4 mejores ejercicios de pecho](https://www.youtube.com/watch?v=4VuCF75s6jE), [Los 4 mejores de espalda](https://www.youtube.com/watch?v=CO5qxkz-KkY), [Los 3 mejores de hombro](https://www.youtube.com/watch?v=6SQeqQHGiXQ), [Los 3 mejores de tríceps](https://www.youtube.com/watch?v=yZmxX1ypJbE), [Los mejores de bíceps](https://www.youtube.com/watch?v=-QnKDiHhSro), [Cómo crecer los cuádriceps](https://www.youtube.com/watch?v=hFKkeNzBG8A), [Tier list de pierna](https://www.youtube.com/watch?v=IIBeY0IyyCU), [Los mejores de glúteo](https://www.youtube.com/watch?v=ziimTMMKZxk), [Cadena posterior](https://www.youtube.com/watch?v=paG8-a8vI6I), [Gemelos](https://www.youtube.com/watch?v=oVDpGxF8-Qo) y [Los 4 mejores de abdomen](https://www.youtube.com/watch?v=irNCQSudRwM); y para entrada en calor, recuperación y comida: [Cómo evitar lesiones (calentamiento)](https://www.youtube.com/watch?v=NAPI0odb9HQ), [Entrenar menos y mejorar más (recuperación)](https://www.youtube.com/watch?v=jE9_eivH8U8), [Descarga](https://www.youtube.com/shorts/PoraDV3TwJI), [Cómo ganar músculo limpio (volumen)](https://www.youtube.com/watch?v=fcxM3ynGDUQ) y [Las mejores fuentes de proteína](https://www.youtube.com/watch?v=YvKgrU44nDo)
