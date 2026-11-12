@@ -872,12 +872,17 @@ function beep(freq, dur, when){
     o.connect(g).connect(audio.destination); o.start(t0); o.stop(t0 + dur + 0.02);
   }catch(e){}
 }
+const SWITCH = 5;
 function buildSteps(c){
-  const steps = [{ kind:'prep', label:'Preparate', dur:5, set:1 }];
+  /* cada serie se hace con los dos brazos, alternando: derecho, cambio, izquierdo y recién ahí el descanso */
+  const steps = [{ kind:'prep', label:'Preparate', dur:5, set:1, side:'Derecho' }];
   for (let s = 1; s <= c.sets; s++){
-    if (c.hold) steps.push({ kind:'work', label:c.holdLabel, dur:c.hold, set:s });
-    else for (let r = 1; r <= c.reps; r++) c.tempo.forEach(([label, dur], k) => steps.push({ kind:'work', label, dur, set:s, rep:r, phase:k }));
-    if (s < c.sets) steps.push({ kind:'rest', label:'Descansá', dur:c.rest, set:s+1 });
+    ['Derecho', 'Izquierdo'].forEach((side, b) => {
+      if (b) steps.push({ kind:'prep', label:'Cambiá de brazo', dur:SWITCH, set:s, side, sw:true });
+      if (c.hold) steps.push({ kind:'work', label:c.holdLabel, dur:c.hold, set:s, side });
+      else for (let r = 1; r <= c.reps; r++) c.tempo.forEach(([label, dur], k) => steps.push({ kind:'work', label, dur, set:s, side, rep:r, phase:k }));
+    });
+    if (s < c.sets) steps.push({ kind:'rest', label:'Descansá', dur:c.rest, set:s+1, side:'Derecho' });
   }
   return steps;
 }
@@ -892,9 +897,9 @@ function renderTimerSetup(){
   const c = T, unit = c.hold ? 's' : 'reps';
   const stepper = (k, label, val, step) => `<div class="field"><span>${label}</span><div class="stepper"><button data-tcfg="${k}" data-d="${-step}" aria-label="Menos">−</button><output class="mono">${val}</output><button data-tcfg="${k}" data-d="${step}" aria-label="Más">+</button></div></div>`;
   const per = c.hold ? c.hold : c.reps * c.tempo.reduce((a, t) => a + t[1], 0);
-  const total = 5 + c.sets * per + (c.sets - 1) * c.rest;
+  const total = 5 + c.sets * (2 * per + SWITCH) + (c.sets - 1) * c.rest;
   openSheet('Hoy', `
-    <section class="glass hero"><div class="tags"><span class="tag">F${c.f}</span><span class="tag">Por brazo</span></div>
+    <section class="glass hero"><div class="tags"><span class="tag">F${c.f}</span><span class="tag">Ambos brazos · alternando</span></div>
       <h2>${esc(c.name)}</h2><div class="en mono" style="font-style:normal">${esc(c.dose)}</div></section>
     <section class="glass pad cfg">
       ${stepper('sets', 'Series', c.sets, 1)}
@@ -903,9 +908,9 @@ function renderTimerSetup(){
       ${c.hold ? '' : `<div class="field"><span>Tempo</span><span class="mono muted" style="font-size:13px;text-align:right">${c.tempo.map(t => esc(t[0]) + ' ' + t[1] + ' s').join(' · ')}</span></div>`}
       <div class="field"><span>Sonido</span><button class="chip" style="background:var(--fill)" data-sound>${settings().sound ? 'Activado' : 'Silenciado'}</button></div>
     </section>
-    <div class="row between"><span class="muted">≈ ${Math.round(total/60)} min · ${c.sets} serie${c.sets>1?'s':''} de ${c.hold ? c.hold+' s' : c.reps+' '+unit}</span>
+    <div class="row between"><span class="muted">≈ ${Math.round(total/60)} min · ${c.sets} serie${c.sets>1?'s':''} de ${c.hold ? c.hold+' s' : c.reps+' '+unit} por brazo</span>
       <button class="btn" data-tstart>Empezar</button></div>
-    <p class="disclaimer">Hacé ambos brazos. Si el dolor pasa de 4/10 durante, pará y bajá carga.</p>`);
+    <p class="disclaimer">Cada serie: derecho, ${SWITCH} s para cambiar, izquierdo y después el descanso. Si el dolor pasa de 4/10 durante, pará y bajá carga.</p>`);
 }
 function startTimer(){
   try{ audio = audio || new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); }catch(e){ audio = null; }
@@ -929,7 +934,7 @@ const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" style="margin-le
 function stepChanged(){
   const st = T.steps[T.i];
   if (st.kind === 'work') beep(st.phase === 0 || st.phase == null ? 880 : 660, 0.12);
-  if (st.kind === 'rest') beep(520, 0.25);
+  if (st.kind === 'rest' || st.sw) beep(520, 0.25);
   T.warned = {};
 }
 function tick(){
@@ -951,9 +956,10 @@ function tick(){
   document.getElementById('tmArc').setAttribute('stroke-dasharray', `${C * (1 - T.elapsed / st.dur)} ${C}`);
   document.getElementById('tmLabel').textContent = st.label;
   document.getElementById('tmNum').textContent = left;
-  document.getElementById('tmSub').textContent = st.kind === 'rest' ? `Sigue la serie ${st.set} de ${T.sets}`
-    : st.kind === 'prep' ? `${T.sets} series · ${T.hold ? T.hold + ' s' : T.reps + ' reps'}`
-    : `Serie ${st.set} de ${T.sets}` + (st.rep ? ` · Rep ${st.rep} de ${T.reps}` : '');
+  document.getElementById('tmSub').textContent = st.kind === 'rest' ? `Sigue la serie ${st.set} de ${T.sets} · derecho`
+    : st.sw ? `Serie ${st.set} de ${T.sets} · ahora el izquierdo`
+    : st.kind === 'prep' ? `${T.sets} series por brazo · arranca el derecho`
+    : `${st.side} · serie ${st.set} de ${T.sets}` + (st.rep ? ` · rep ${st.rep} de ${T.reps}` : '');
   const nx = T.steps[T.i + 1];
   document.getElementById('tmNext').textContent = nx ? (nx.kind === 'rest' ? `Después: descanso ${nx.dur} s` : st.kind !== 'work' ? `Después: ${nx.label}` : '') : 'Último tramo';
   [...document.getElementById('tmPills').children].forEach((p, k) => p.className = k + 1 < st.set ? 'done' : k + 1 === st.set ? 'cur' : '');
@@ -964,7 +970,7 @@ function jump(d){
   const cur = T.steps[T.i];
   if (d > 0){ /* saltar al próximo cambio de serie o descanso */
     let j = T.i + 1;
-    if (cur.kind === 'work') while (j < T.steps.length && T.steps[j].kind === 'work' && T.steps[j].set === cur.set) j++;
+    if (cur.kind === 'work') while (j < T.steps.length && T.steps[j].kind === 'work' && T.steps[j].set === cur.set && T.steps[j].side === cur.side) j++;
     if (j >= T.steps.length) return finishTimer();
     T.i = j;
   } else {
@@ -980,7 +986,7 @@ function finishTimer(){
   const name = T.name; T = null;
   openSheet('Hoy', `<section class="glass tm-stage tm-rest"><div class="tm-label" style="font-size:28px">Listo</div>
     <div class="tm-sub">${esc(name)} quedó marcado como hecho.</div>
-    <div class="note">Si es el primer brazo, repetí con el otro.</div></section>
+    <div class="note">Hiciste los dos brazos.</div></section>
     <div class="row" style="justify-content:center"><button class="btn" data-close>Volver a Hoy</button></div>`);
 }
 function stopTimer(){ if (T){ cancelAnimationFrame(T.raf); try{ T.lock && T.lock.release(); }catch(e){} } T = null; }

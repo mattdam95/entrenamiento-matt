@@ -81,7 +81,9 @@ Con 60 kg y 170 cm, el limitante es más la comida que el entrenamiento. Sin sup
 
 ## 4 · Fichas de ejercicios
 
-Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). Mismo formato que las fichas del plan de antebrazos.
+Veintisiete ejercicios en dos grupos: torso (G1–G12 y G21–G25) y piernas y core (G13–G20, G26 y G27). Mismo formato que las fichas del plan de antebrazos.
+
+**Cómo están elegidos:** según lo que recomienda Bluegym Animation (§8) para cada músculo, adaptado a lo que hay en el gimnasio y al semáforo de antebrazo. Donde él prefiere la polea a la mancuerna (laterales, curl, tríceps sobre la cabeza), la versión con polea es la principal y la de mancuerna queda como alternativa: así no se pierde el historial de cargas que ya tengas.
 
 **Semáforo de agarre:** 🟢 sin agarre o agarre liviano, entra desde ya · 🟡 agarre medio/alto, con straps y dentro del presupuesto de antebrazo (§14 del plan).
 
@@ -94,7 +96,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 *Lat pulldown* · 🟡 con straps · ETAPA 1–4
 
 - **Trabaja** — Dorsales, redondo mayor, bíceps. Es el ejercicio principal para "abrir" la espalda.
-- **Ejecución** — Rodillas trabadas bajo el apoyo, straps puestos. Agarre algo más ancho que los hombros. Llevá el pecho hacia la barra (leve inclinación atrás, 10–20°) y bajá la barra hasta la parte alta del pecho, codos hacia abajo y atrás. Subí controlado hasta tener los brazos estirados y sentir el estiramiento del dorsal. La mano es un gancho: el strap sostiene, los dedos apenas cierran.
+- **Ejecución** — Rodillas trabadas bajo el apoyo, straps puestos. Agarre algo más ancho que los hombros. Llevá el pecho hacia la barra (leve inclinación atrás, 10–20°) y bajá la barra hasta la parte alta del pecho, codos hacia abajo y atrás: pensá en llevar los codos a los dorsales, no en tirar con los brazos. Subí controlado hasta tener los brazos estirados y sentir el estiramiento del dorsal. La mano es un gancho: el strap sostiene, los dedos apenas cierran.
 - **Dosis** — `3×8–12 · 120 s`. Etapa 1: `2×10–12`.
 - **Progresión** — Doble progresión, +1 placa.
 - **Errores** —
@@ -121,7 +123,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 *One-arm kettlebell row* · 🟡 con straps · ETAPA 2–4
 
 - **Trabaja** — Dorsal y espalda media, con más carga que G2.
-- **Ejecución** — Rodilla y mano del mismo lado sobre el banco, espalda plana, la otra pierna en el piso. Kettlebell (14 o 18 kg) colgando con strap. Tirá el codo hacia la cadera, pausa arriba, bajá hasta estirar.
+- **Ejecución** — Rodilla y mano del mismo lado sobre el banco, espalda plana, la otra pierna en el piso. Kettlebell (14 o 18 kg) colgando con strap. Tirá el codo hacia la cadera, pegado al torso, pausa arriba, y bajá lento (2–3 s) hasta abajo del todo: no te quedes a mitad de recorrido. Es el remo favorito de Bluegym para dorsales.
 - **Dosis** — `3×8–12 por lado · 90 s`.
 - **Progresión** — 14 → 18 kg → kettlebells del gimnasio. Con el máximo, subí reps hasta 15 y después tempo con 2 s de pausa arriba.
 - **Errores** —
@@ -159,9 +161,9 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 
 #### G6 · Press de hombros con mancuernas, sentado
 
-*Seated dumbbell shoulder press* · 🟢 · ETAPA 1–4
+*Seated dumbbell shoulder press* · 🟢 · ETAPA 3–4
 
-- **Trabaja** — Deltoides anterior y medio, tríceps.
+- **Trabaja** — Deltoides anterior y medio, tríceps. Con press plano, flexiones y cruces el deltoides anterior ya trabaja de sobra, así que en las Etapas 1–2 no hace falta (es lo que recomienda Bluegym). Vuelve en la Etapa 3, en el día de hombros y brazos.
 - **Ejecución** — Sentado en el banco (sin respaldo: abdomen firme, espalda neutra). Mancuernas a la altura de los hombros con agarre semineutro, codos un poco adelante del torso. Empujá hasta casi estirar y bajá controlado hasta la altura de las orejas o un poco más abajo.
 - **Dosis** — `2–3×8–12 · 90 s`.
 - **Progresión** — Doble progresión con mancuernas.
@@ -172,7 +174,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 
 #### G7 · Elevaciones laterales
 
-*Dumbbell lateral raise* · 🟢 · ETAPA 1–4
+*Dumbbell lateral raise* · 🟢 · ETAPA 1–4 · alternativa a G25
 
 - **Trabaja** — Deltoides medio: es lo que da ancho de hombros. Uno de los ejercicios con mejor relación esfuerzo/resultado para tu objetivo.
 - **Ejecución** — De pie, mancuernas livianas (2–5 kg), codos apenas flexionados. Subí abriendo hacia los costados hasta la altura de los hombros, guiando con los codos, no con las manos. Bajá en 2–3 s. Agarre suave: los dedos sólo evitan que se caiga.
@@ -186,21 +188,21 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 
 #### G8 · Face pull en polea alta
 
-*Cable face pull* · 🟢 · ETAPA 1–4 · opcional
+*Cable face pull* · 🟢 · ETAPA 1–4
 
-- **Trabaja** — Deltoides posterior, rotadores externos, trapecio medio. Salud del hombro.
-- **Ejecución** — Polea a la altura de la cara, soga o manija. Tirá hacia la frente separando las manos y girando los antebrazos hacia arriba ("doble bíceps" al final).
+- **Trabaja** — Deltoides posterior y espalda media (romboides, trapecio medio). Bluegym lo recomienda para cerrar el día de espalda.
+- **Ejecución** — Polea a la altura de la cara, soga. Hay dos variantes. **Para hipertrofia** (la del plan): tirá con los brazos casi rectos y el cable alineado con los hombros, abriendo las manos hacia los costados hasta formar una T. **Para salud del hombro**: polea un poco más baja, tirá hacia la frente separando las manos y girando los antebrazos hacia arriba (rotación externa). Para estabilizarte, un pie adelante o sentado en el banco.
 - **Dosis** — `2×15–20 · 60 s`.
 - **Progresión** — Reps, después placa.
-- **Errores** — Tirar con la espalda baja; peso de más.
-- **Si molesta el antebrazo** — No lo hagas: la ficha 11 del plan de antebrazos ya cubre lo mismo con banda. Por eso es opcional.
+- **Errores** — Tirar con la espalda baja; peso de más que obliga a balancearse.
+- **Si molesta el antebrazo** — Manijas como gancho, o banda con la banda alrededor de la muñeca. Si igual molesta, sacalo: la ficha 11 del plan de antebrazos cubre la parte de salud del hombro.
 
 #### G9 · Apertura en polea, de a un brazo
 
-*Single-arm cable fly* · 🟢 · ETAPA 2–4
+*Single-arm cable fly* · 🟢 · ETAPA 1–4
 
-- **Trabaja** — Pectoral con tensión en el estiramiento, sin cargar la muñeca.
-- **Ejecución** — Polea a la altura del pecho, de pie de costado a la torre, un pie adelante. Brazo abierto con el codo apenas flexionado; cerrá en arco hasta que la mano pase la línea media del pecho. Volvé lento hasta sentir el estiramiento.
+- **Trabaja** — Pectoral entero con tensión en el estiramiento, sin cargar la muñeca. Bluegym lo pone entre los cuatro básicos del pecho porque es el que más estira el músculo; con la polea alta también reemplaza a los fondos para la parte baja.
+- **Ejecución** — Polea a la altura del pecho, de pie de costado a la torre, un pie adelante. Brazo abierto con el codo apenas flexionado; cerrá en arco hasta que la mano pase la línea media del pecho. Volvé lento, llevando el brazo un poco por detrás de la línea del hombro, hasta sentir el estiramiento máximo. **Variante para la parte baja del pecho:** polea alta, bajando la mano en diagonal hacia la cadera contraria.
 - **Dosis** — `2×12–15 por lado · 60 s`.
 - **Progresión** — Reps, después placa.
 - **Errores** — Doblar el codo y convertirlo en un press; girar el torso.
@@ -208,7 +210,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 
 #### G10 · Curl de bíceps con mancuerna
 
-*Dumbbell biceps curl (supinated)* · 🟢 · ETAPA 1–4
+*Dumbbell biceps curl (supinated)* · 🟢 · ETAPA 1–4 · alternativa a G22
 
 - **Trabaja** — Bíceps, braquial.
 - **Ejecución** — De pie o sentado, palmas hacia adelante (supino). Codos quietos al costado del cuerpo, subí sin balancear y bajá en 2–3 s. Muñeca recta, sin "enrollarla" arriba.
@@ -217,13 +219,13 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 - **Errores** —
 - Balanceo con la espalda.
 - Flexionar la muñeca para "ganar" las últimas reps.
-- **Si molesta el antebrazo** — Evitá el martillo (agarre neutro) y el curl invertido (palmas abajo) hasta Fase 4: cargan la inserción lateral del codo. Si duele en la cara interna del codo, bajá peso y hacé 15–20.
+- **Si molesta el antebrazo** — Evitá el martillo (agarre neutro) y el curl invertido (palmas abajo) hasta Fase 4: cargan la inserción lateral del codo. Bluegym recomienda sumar un martillo para el braquial; en tu caso entra recién en Fase 4, como tercer ejercicio de bíceps del día de tirón. Si duele en la cara interna del codo, bajá peso y hacé 15–20.
 
 #### G11 · Extensión de tríceps en polea alta
 
-*Single-arm cable pushdown* · 🟢 · ETAPA 1–4
+*Single-arm cable pushdown* · 🟢 · ETAPA 3–4
 
-- **Trabaja** — Tríceps.
+- **Trabaja** — Tríceps, sobre todo las cabezas lateral y medial, que ya trabajan en todos los press. Por eso, mientras haya press plano y flexiones en la misma semana, alcanza con G24; el pushdown entra en la Etapa 3 como segundo ejercicio de tríceps.
 - **Ejecución** — Polea alta, manija o soga. Codo pegado al costado, estirá el brazo hasta abajo y volvé hasta ~90°. Muñeca recta.
 - **Dosis** — `2–3×10–15 por lado · 60 s`.
 - **Progresión** — Reps, después placa.
@@ -232,7 +234,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 
 #### G12 · Extensión de tríceps sobre la cabeza
 
-*Overhead dumbbell triceps extension* · 🟢 · ETAPA 1–4
+*Overhead dumbbell triceps extension* · 🟢 · ETAPA 1–4 · alternativa a G24
 
 - **Trabaja** — Tríceps, sobre todo la porción larga (la que más volumen da al brazo y la que menos trabaja el pushdown).
 - **Ejecución** — Sentado, una mancuerna tomada con las dos manos por el disco de arriba (las palmas abiertas contra el disco, sin cerrar los dedos). Codos apuntando al techo, bajá la mancuerna detrás de la cabeza hasta sentir el estiramiento y subí.
@@ -241,6 +243,76 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 - **Errores** — Abrir los codos; arquear la espalda.
 - **Si molesta el antebrazo** — Con la polea baja de espaldas a la torre, manija como gancho.
 
+#### G21 · Cruce en polea de abajo hacia arriba
+
+*Low-to-high cable fly* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Pectoral superior (la parte que va a la clavícula), que trabaja cuando el brazo sube hacia adelante. Reemplaza al press inclinado, que es el primero de los cuatro básicos de pecho de Bluegym pero no se puede hacer con un banco fijo.
+- **Ejecución** — Polea en la posición más baja, manija tomada como gancho. De pie de costado a la torre, un pie adelante. Brazo abajo y apenas por detrás de la cadera, codo un poco flexionado y fijo. Subí la mano en diagonal hacia arriba y al centro hasta la altura del mentón, cruzando apenas la línea media. Bajá lento hasta sentir el estiramiento en la parte alta del pecho.
+- **Dosis** — `2–3×12–15 por lado · 60 s`.
+- **Progresión** — Reps, después placa.
+- **Errores** —
+- Doblar el codo y convertirlo en un press.
+- Subir el hombro hacia la oreja.
+- Girar el torso para mover más peso.
+- **Si molesta el antebrazo** — Agarre suave; si sigue, las flexiones con pies elevados (G5) cubren la misma zona.
+
+#### G22 · Curl bayesiano en polea
+
+*Bayesian cable curl* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Bíceps con el brazo por detrás del cuerpo: estira al máximo la cabeza larga, y la polea mantiene la tensión en todo el recorrido (la mancuerna la pierde abajo). Es el curl principal que recomienda Bluegym; su versión ideal es en banco inclinado, que acá no hay.
+- **Ejecución** — Polea baja, manija. De espaldas a la torre, un paso adelante: el brazo queda estirado y por detrás del torso. Palma hacia adelante (supina) toda la serie, codo quieto apuntando abajo; flexioná hasta arriba y bajá en 2–3 s hasta estirar del todo.
+- **Dosis** — `2–3×10–15 por lado · 60 s`.
+- **Progresión** — Reps, después placa.
+- **Errores** —
+- Llevar el codo adelante a medida que subís.
+- Rotar la muñeca durante el recorrido.
+- Balancear el cuerpo.
+- **Si molesta el antebrazo** — Como en G10: palma siempre arriba, nada de martillo. Si molesta la cara interna del codo, bajá una placa y hacé 15–20. Alternativa: G10.
+
+#### G23 · Curl concentrado
+
+*Concentration curl* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Bíceps con el brazo por delante del cuerpo, con énfasis en la cabeza corta. Complementa a G22: Bluegym arma el bíceps con un curl de cada tipo.
+- **Ejecución** — Sentado en el banco, piernas abiertas, la parte de atrás del brazo apoyada contra la cara interna del muslo. Mancuerna con la palma hacia arriba; flexioná sin despegar el brazo y bajá en 3 s hasta estirar del todo.
+- **Dosis** — `2×10–15 por lado · 60 s`.
+- **Progresión** — Doble progresión con mancuernas: a un brazo los saltos de 1–2 kg quedan bien.
+- **Errores** —
+- Ayudarte con el hombro o el torso.
+- Cortar el recorrido abajo.
+- Doblar la muñeca al subir.
+- **Si molesta el antebrazo** — Bajá peso y hacé 15–20, con la palma siempre arriba.
+
+#### G24 · Extensión de tríceps sobre la cabeza en polea
+
+*Overhead cable triceps extension* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Tríceps, sobre todo la cabeza larga, que es la que más volumen le da al brazo. Con el brazo arriba se estira al máximo y la polea mantiene la tensión en todo el recorrido. Con todo el press que ya hacés, Bluegym recomienda que tu ejercicio de tríceps sea este.
+- **Ejecución** — Polea a la altura de la cintura, soga. De espaldas a la torre, un paso adelante y el torso un poco inclinado. Codos arriba, cerca de la cabeza, formando una V; bajá la soga por detrás de la cabeza hasta sentir el estiramiento y extendé sin mover los codos. A una mano también sirve.
+- **Dosis** — `2–3×10–15 · 60 s`.
+- **Progresión** — Reps, después placa.
+- **Errores** —
+- Abrir los codos: el trabajo pasa al hombro.
+- Arquear la zona lumbar.
+- Mover el brazo entero en vez de sólo el antebrazo.
+- **Si molesta el antebrazo** — Soga en lugar de manija, sin cerrar fuerte. Si sigue, G12 con las palmas abiertas contra el disco.
+
+#### G25 · Elevación lateral en polea a una mano
+
+*Single-arm cable lateral raise* · 🟢 · ETAPA 1–4
+
+- **Trabaja** — Deltoides medio, el que da ancho de hombros. Bluegym lo pone en tier S: la polea mantiene la tensión también abajo, donde la mancuerna la pierde, y a una mano te concentrás mejor y cuidás el hombro.
+- **Ejecución** — Polea a la altura de la cadera, de costado a la torre: el cable pasa por delante del cuerpo y lo tomás con la mano del lado contrario. La otra mano apoyada en la torre, torso apenas inclinado hacia afuera. Empezá con el brazo cruzado por delante (estiramiento) y subí abriendo hasta la altura del hombro, guiando con el codo. Bajá en 2–3 s.
+- **Dosis** — `3×12–20 por lado · 60 s`. Desde la Etapa 2, la última serie podés estirarla con medias repeticiones hasta no poder más.
+- **Progresión** — Reps, después placa. El deltoides tolera bien ir al fallo y entrenarse hasta 3 veces por semana.
+- **Errores** —
+- Subir el hombro hacia la oreja.
+- Balancear el torso.
+- Peso de más: termina siendo un encogimiento.
+- **Si molesta el antebrazo** — Manija como gancho, o un strap enganchado a la muñeca para no agarrar nada. Alternativa: G7.
+
 ### Piernas y core
 
 #### G13 · Sentadilla goblet
@@ -248,7 +320,7 @@ Veinte ejercicios en dos grupos: torso (G1–G12) y piernas y core (G13–G20). 
 *Goblet squat* · 🟢 · ETAPA 1–4
 
 - **Trabaja** — Cuádriceps, glúteos, aductores; core.
-- **Ejecución** — Kettlebell (14 o 18 kg) **en cuna**: la pesa apoyada contra el pecho, sostenida con las palmas por debajo de la bola, no colgando de las asas (así casi no hay agarre). Pies algo más anchos que la cadera, puntas un poco afuera. Bajá entre las piernas con el pecho alto hasta que los muslos queden paralelos o más abajo, y subí empujando el piso.
+- **Ejecución** — Kettlebell (14 o 18 kg) **en cuna**: la pesa apoyada contra el pecho, sostenida con las palmas por debajo de la bola, no colgando de las asas (así casi no hay agarre). Pies algo más anchos que la cadera, puntas un poco afuera. Bajá entre las piernas con el pecho alto hasta que los muslos queden paralelos o más abajo (cuanto más profundo, más trabaja; bajá hasta donde mantengas la técnica), rodillas alineadas con las puntas, y subí empujando el piso con los talones.
 - **Dosis** — `3×8–12 · 120 s`.
 - **Progresión** — 14 → 18 kg → kettlebells del gimnasio → tempo 3-1-1 (3 s de bajada, 1 s de pausa abajo) → reps hasta 15. Cuando 18 kg con tempo ya es fácil, la búlgara (G14) pasa a ser el ejercicio principal de cuádriceps.
 - **Errores** —
